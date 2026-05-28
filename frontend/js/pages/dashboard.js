@@ -126,11 +126,15 @@ export function renderDashboard() {
             <!-- Productores List -->
             <div class="col-span-full md-col-6">
               <section class="dashboard-section" style="height: 100%;">
-                <div class="dashboard-section__header">
+                <div class="dashboard-section__header" style="display: flex; justify-content: space-between; align-items: center;">
                   <h3 class="dashboard-section__title">
                     <span class="material-symbols-outlined" style="color: var(--tertiary); vertical-align: middle; margin-right: 6px;">group</span>
                     Productores
                   </h3>
+                  <button class="btn btn-primary" style="padding: 6px 12px; font-size: 10px; border-radius: var(--radius-xl); background: var(--tertiary); color: var(--on-tertiary);" id="btn-new-productor">
+                    <span class="material-symbols-outlined" style="font-size: 14px;">person_add</span>
+                    NUEVO
+                  </button>
                 </div>
                 <div id="productores-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto;" class="hide-scrollbar">
                   <div style="text-align: center; padding: 32px;">
@@ -224,6 +228,7 @@ export function initDashboard() {
   loadDashboardData();
   initQRGenerator();
   initSensorData();
+  initDashboardModals();
 
   document.getElementById('btn-refresh-dashboard')?.addEventListener('click', () => {
     loadDashboardData();
@@ -377,8 +382,8 @@ function renderProductoresList(productores) {
          onmouseover="this.style.background='var(--surface-container-high)'; this.style.transform='translateX(4px)'"
          onmouseout="this.style.background='var(--surface-container-low)'; this.style.transform='translateX(0)'"
          data-nav="story">
-      <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--tertiary-container); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-        <span class="material-symbols-outlined" style="color: var(--on-tertiary-container); font-size: 22px;">person</span>
+      <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--tertiary-container); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+        ${p.foto_url ? `<img src="${p.foto_url}" style="width: 100%; height: 100%; object-fit: cover;" />` : `<span class="material-symbols-outlined" style="color: var(--on-tertiary-container); font-size: 22px;">person</span>`}
       </div>
       <div style="flex: 1; min-width: 0;">
         <p style="font-weight: 600; font-size: 14px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.nombre}</p>
@@ -548,4 +553,409 @@ function renderEmptyStates() {
   renderLotesTable([], []);
   renderProductoresList([]);
   renderTimeline([], []);
+}
+
+function initDashboardModals() {
+  // --- NUEVO PRODUCTOR MODAL ---
+  document.getElementById('btn-new-productor')?.addEventListener('click', () => {
+    const modal = document.createElement('div');
+    modal.id = 'productor-modal';
+    modal.style = `
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 12, 8, 0.7); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; padding: 20px; box-sizing: border-box;
+      opacity: 0; transition: opacity 0.3s ease;
+    `;
+
+    modal.innerHTML = `
+      <div style="
+        background: var(--surface-container-high); border-radius: var(--radius-xl);
+        padding: 32px; width: 100%; max-width: 600px; box-shadow: var(--shadow-lg);
+        border: 1px solid var(--outline-variant); max-height: 90vh; overflow-y: auto;
+        display: flex; flex-direction: column; gap: 24px;
+        transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      " class="hide-scrollbar">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 16px;">
+          <h3 class="headline-md" style="color: var(--on-background); margin: 0; display: flex; align-items: center; gap: 10px;">
+            <span class="material-symbols-outlined" style="color: var(--tertiary); font-size: 28px;">person_add</span>
+            Registrar Productor
+          </h3>
+          <button id="modal-close" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer;">
+            <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
+          </button>
+        </div>
+
+        <form id="productor-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Nombre Completo *</label>
+              <input type="text" id="prod-nombre" required class="form-field__input" placeholder="Gabriel Senior" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Cédula *</label>
+              <input type="text" id="prod-cedula" required class="form-field__input" placeholder="100023456" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Nombre de Finca *</label>
+              <input type="text" id="prod-finca" required class="form-field__input" placeholder="Finca La Consentida" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Ubicación (Municipio / Vereda) *</label>
+              <input type="text" id="prod-ubicacion" required class="form-field__input" placeholder="Minca, Santa Marta" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Altitud (msnm)</label>
+              <input type="number" id="prod-altitud" class="form-field__input" placeholder="1200" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Hectáreas</label>
+              <input type="number" step="0.1" id="prod-hectareas" class="form-field__input" placeholder="4.5" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Variedad de Cacao</label>
+              <input type="text" id="prod-variedad" class="form-field__input" placeholder="Criollo / Trinitario" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Teléfono</label>
+              <input type="text" id="prod-telefono" class="form-field__input" placeholder="+57 300 123 4567" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Email</label>
+              <input type="email" id="prod-email" class="form-field__input" placeholder="gabriel@cacao.com" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label">Historia & Filosofía</label>
+            <textarea id="prod-historia" rows="3" class="form-field__input" placeholder="Cuéntanos la historia del productor, su tradición cacaotera y compromiso con la Sierra..." style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg); font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <!-- ImgBB Image Upload field -->
+          <div class="form-field" style="background: var(--surface-container-low); padding: 16px; border-radius: var(--radius-lg); border: 1px dashed var(--outline-variant); display: flex; flex-direction: column; gap: 12px;">
+            <label class="form-field__label" style="display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--tertiary);">
+              <span class="material-symbols-outlined">image</span>
+              Foto del Productor (Subir a ImgBB)
+            </label>
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <label style="
+                background: var(--tertiary-container); color: var(--on-tertiary-container);
+                padding: 10px 16px; border-radius: var(--radius-xl); cursor: pointer;
+                font-weight: 500; font-size: 11px; display: inline-flex; align-items: center; gap: 8px;
+                transition: all 0.2s;
+              " onmouseover="this.style.filter='brightness(0.95)'" onmouseout="this.style.filter='none'">
+                <span class="material-symbols-outlined" style="font-size: 18px;">upload</span>
+                SELECCIONAR FOTO
+                <input type="file" id="prod-photo-file" accept="image/*" style="display: none;" />
+              </label>
+              <div id="upload-status" style="font-size: 12px; color: var(--on-surface-variant);">Ningún archivo seleccionado</div>
+            </div>
+            <div id="photo-preview-container" style="display: none; align-items: center; gap: 12px; background: var(--surface-container-highest); padding: 8px; border-radius: var(--radius-lg);">
+              <img id="photo-preview" src="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border: 2px solid var(--tertiary);" />
+              <div style="flex: 1; min-width: 0;">
+                <p style="font-size: 11px; font-weight: 600; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" id="preview-filename"></p>
+                <p style="font-size: 10px; color: var(--tertiary); font-weight: 600;">⚡ URL Segura ImgBB Generada</p>
+              </div>
+            </div>
+            <input type="hidden" id="prod-foto-url" value="" />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--outline-variant); padding-top: 16px; margin-top: 8px;">
+            <button type="button" id="btn-cancel-productor" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">CANCELAR</button>
+            <button type="submit" id="btn-save-productor" class="btn btn-primary" style="background: var(--tertiary); color: var(--on-tertiary); border-radius: var(--radius-xl); padding: 10px 24px; display: inline-flex; align-items: center; gap: 8px;">
+              <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+              GUARDAR PRODUCTOR
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Fade and Scale Animate-In
+    setTimeout(() => {
+      modal.style.opacity = '1';
+      modal.firstElementChild.style.transform = 'scale(1)';
+    }, 10);
+
+    const closeModal = () => {
+      modal.style.opacity = '0';
+      modal.firstElementChild.style.transform = 'scale(0.9)';
+      setTimeout(() => modal.remove(), 300);
+    };
+
+    document.getElementById('modal-close')?.addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-productor')?.addEventListener('click', closeModal);
+
+    // ImgBB Upload Handler
+    document.getElementById('prod-photo-file')?.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('upload-status');
+      const saveBtn = document.getElementById('btn-save-productor');
+      const previewContainer = document.getElementById('photo-preview-container');
+      const previewImg = document.getElementById('photo-preview');
+      const filenameEl = document.getElementById('preview-filename');
+      const fotoUrlInput = document.getElementById('prod-foto-url');
+
+      if (statusEl) statusEl.innerHTML = '<span class="spinner" style="width: 14px; height: 14px; border-width: 2px; vertical-align: middle; margin-right: 6px;"></span> Subiendo imagen a ImgBB...';
+      if (saveBtn) saveBtn.disabled = true;
+
+      try {
+        const imageUrl = await api.uploadImage(file);
+        
+        if (fotoUrlInput) fotoUrlInput.value = imageUrl;
+        if (statusEl) statusEl.textContent = '¡Imagen subida con éxito!';
+        if (filenameEl) filenameEl.textContent = file.name;
+        if (previewImg) previewImg.src = imageUrl;
+        if (previewContainer) previewContainer.style.display = 'flex';
+      } catch (err) {
+        if (statusEl) statusEl.innerHTML = `<span style="color: var(--error);">❌ Error: ${err.message}</span>`;
+      } finally {
+        if (saveBtn) saveBtn.disabled = false;
+      }
+    });
+
+    // Form submit handler
+    document.getElementById('productor-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-productor');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></span> Guardando...';
+      }
+
+      const payload = {
+        nombre: document.getElementById('prod-nombre').value,
+        cedula: document.getElementById('prod-cedula').value,
+        finca: document.getElementById('prod-finca').value,
+        ubicacion: document.getElementById('prod-ubicacion').value,
+        altitud_msnm: parseInt(document.getElementById('prod-altitud').value) || null,
+        hectareas: parseFloat(document.getElementById('prod-hectareas').value) || null,
+        variedad_cacao: document.getElementById('prod-variedad').value || null,
+        telefono: document.getElementById('prod-telefono').value || null,
+        email: document.getElementById('prod-email').value || null,
+        historia: document.getElementById('prod-historia').value || null,
+        foto_url: document.getElementById('prod-foto-url').value || null,
+      };
+
+      try {
+        await api.createProductor(payload);
+        
+        // Dynamic Toast Notification
+        const toast = document.createElement('div');
+        toast.style = `
+          position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+          background: var(--tertiary); color: var(--on-tertiary); padding: 14px 28px;
+          border-radius: var(--radius-xl); font-weight: 600; z-index: 10000; box-shadow: var(--shadow-lg);
+          font-size: 13px; display: flex; align-items: center; gap: 8px; animation: fadeInScale 0.3s ease;
+        `;
+        toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ¡Productor registrado y guardado exitosamente!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+
+        closeModal();
+        loadDashboardData();
+      } catch (err) {
+        alert(`Error al registrar productor: ${err.message}`);
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">save</span> GUARDAR PRODUCTOR';
+        }
+      }
+    });
+  });
+
+  // --- NUEVO LOTE MODAL ---
+  document.getElementById('btn-new-lote')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-new-lote');
+    if (btn) btn.disabled = true;
+
+    let productores = [];
+    try {
+      productores = await api.getProductores();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+
+    if (productores.length === 0) {
+      alert('Debes registrar al menos un productor antes de crear un lote.');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'lote-modal';
+    modal.style = `
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 12, 8, 0.7); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; padding: 20px; box-sizing: border-box;
+      opacity: 0; transition: opacity 0.3s ease;
+    `;
+
+    // Generate random lote code like LOT-2026-X
+    const randCode = `LOT-2026-${Math.floor(100 + Math.random() * 900)}`;
+
+    modal.innerHTML = `
+      <div style="
+        background: var(--surface-container-high); border-radius: var(--radius-xl);
+        padding: 32px; width: 100%; max-width: 600px; box-shadow: var(--shadow-lg);
+        border: 1px solid var(--outline-variant); max-height: 90vh; overflow-y: auto;
+        display: flex; flex-direction: column; gap: 24px;
+        transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      " class="hide-scrollbar">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 16px;">
+          <h3 class="headline-md" style="color: var(--on-background); margin: 0; display: flex; align-items: center; gap: 10px;">
+            <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 28px;">inventory_2</span>
+            Registrar Lote de Cacao
+          </h3>
+          <button id="modal-lote-close" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer;">
+            <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
+          </button>
+        </div>
+
+        <form id="lote-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Código del Lote *</label>
+              <input type="text" id="lote-codigo" required class="form-field__input" value="${randCode}" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg); font-family: monospace;" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Productor *</label>
+              <select id="lote-productor-id" required class="form-field__select" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg); height: 44px; width: 100%;">
+                ${productores.map(p => `<option value="${p.id}">${p.nombre} (${p.finca})</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Variedad de Cacao *</label>
+              <select id="lote-variedad" required class="form-field__select" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg); height: 44px; width: 100%;">
+                <option value="Criollo">Criollo</option>
+                <option value="Trinitario">Trinitario</option>
+                <option value="Forastero">Forastero</option>
+                <option value="Híbrido">Híbrido</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Peso (kg) *</label>
+              <input type="number" step="0.1" id="lote-peso" required class="form-field__input" placeholder="45.5" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-field">
+              <label class="form-field__label">Fecha de Cosecha *</label>
+              <input type="date" id="lote-fecha-cosecha" required class="form-field__input" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+            <div class="form-field">
+              <label class="form-field__label">Puntaje de Calidad (0-100)</label>
+              <input type="number" id="lote-calidad" min="0" max="100" class="form-field__input" placeholder="85" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label">Origen / Lote de Finca</label>
+            <input type="text" id="lote-origen" class="form-field__input" placeholder="Lote Alto Minca" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
+          </div>
+
+          <div class="form-field">
+            <label class="form-field__label">Notas de Cata</label>
+            <textarea id="lote-notas" rows="3" class="form-field__input" placeholder="Notas de sabor: cítrico, chocolate amargo, frutos rojos, nuez..." style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg); font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--outline-variant); padding-top: 16px; margin-top: 8px;">
+            <button type="button" id="btn-cancel-lote" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">CANCELAR</button>
+            <button type="submit" id="btn-save-lote" class="btn btn-primary" style="background: var(--secondary); color: var(--on-secondary); border-radius: var(--radius-xl); padding: 10px 24px; display: inline-flex; align-items: center; gap: 8px;">
+              <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
+              REGISTRAR LOTE
+            </button>
+          </div>
+        </form>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Set default harvest date to today
+    const dateInput = document.getElementById('lote-fecha-cosecha');
+    if (dateInput) {
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+
+    // Fade and Scale Animate-In
+    setTimeout(() => {
+      modal.style.opacity = '1';
+      modal.firstElementChild.style.transform = 'scale(1)';
+    }, 10);
+
+    const closeModal = () => {
+      modal.style.opacity = '0';
+      modal.firstElementChild.style.transform = 'scale(0.9)';
+      setTimeout(() => modal.remove(), 300);
+    };
+
+    document.getElementById('modal-lote-close')?.addEventListener('click', closeModal);
+    document.getElementById('btn-cancel-lote')?.addEventListener('click', closeModal);
+
+    // Form submit handler
+    document.getElementById('lote-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-lote');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></span> Registrando...';
+      }
+
+      const payload = {
+        codigo: document.getElementById('lote-codigo').value,
+        productor_id: parseInt(document.getElementById('lote-productor-id').value),
+        variedad: document.getElementById('lote-variedad').value,
+        peso_kg: parseFloat(document.getElementById('lote-peso').value),
+        fecha_cosecha: new Date(document.getElementById('lote-fecha-cosecha').value).toISOString(),
+        puntaje_calidad: parseFloat(document.getElementById('lote-calidad').value) || null,
+        origen: document.getElementById('lote-origen').value || null,
+        notas_cata: document.getElementById('lote-notas').value || null,
+      };
+
+      try {
+        await api.createLote(payload);
+        
+        // Dynamic Toast Notification
+        const toast = document.createElement('div');
+        toast.style = `
+          position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+          background: var(--secondary); color: var(--on-secondary); padding: 14px 28px;
+          border-radius: var(--radius-xl); font-weight: 600; z-index: 10000; box-shadow: var(--shadow-lg);
+          font-size: 13px; display: flex; align-items: center; gap: 8px; animation: fadeInScale 0.3s ease;
+        `;
+        toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ¡Lote registrado con trazabilidad SHA-256 e inmutable!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+
+        closeModal();
+        loadDashboardData();
+      } catch (err) {
+        alert(`Error al registrar lote: ${err.message}`);
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">save</span> REGISTRAR LOTE';
+        }
+      }
+    });
+  });
 }

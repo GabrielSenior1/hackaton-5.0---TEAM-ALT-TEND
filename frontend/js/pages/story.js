@@ -18,6 +18,7 @@ export function renderStory() {
             <div class="col-span-full md-col-6">
               <div style="position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 4/5;" class="soft-shadow">
                 <img 
+                  id="producer-img"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM8Aat_Ni-t1dndmMkfVSpPgzfEePvq4jMozQpJAb8I1Y9bCG4by_Xfqp_zJQS3bXKZ3WWyZsJ4D-dTBqpfPJykFMbnt-qNKHs9V1L7Xs6hDE6U5Rt2CFavtvCoR29kVRftnt-n75geiK9xPuPs7zA6PwqjqVHov_DIfycObllQ35_jojoFGmu6UlYdXxedD9jy-D0-i8lGpITNUvOR2EZ33nRZYOjYD8whYiKCqYE1kz4l1WoCACY0odlskXlZLU7dqO3zYOpNA"
                   alt="Productor de Cacao"
                   style="width: 100%; height: 100%; object-fit: cover;"
@@ -139,8 +140,10 @@ async function loadProducerData() {
       const p = productores[0];
       const nameEl = document.getElementById('producer-name');
       const storyEl = document.getElementById('producer-story');
+      const imgEl = document.getElementById('producer-img');
       if (nameEl && p.nombre) nameEl.textContent = p.nombre;
       if (storyEl && p.historia) storyEl.textContent = p.historia;
+      if (imgEl && p.foto_url) imgEl.src = p.foto_url;
     }
   } catch (e) {
     // Keep default demo data

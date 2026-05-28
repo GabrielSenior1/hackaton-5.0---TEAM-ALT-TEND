@@ -128,12 +128,20 @@ export function subscribeSensorData(callback) {
  */
 export async function uploadPhoto(file, path) {
   if (!isFirebaseReady || !window.__firebase) {
-    throw new Error('Firebase not initialized');
+    console.warn('⚠️ Firebase storage not ready, falling back to ImgBB...');
+    const { api } = await import('./api.js');
+    return api.uploadImage(file);
   }
-  const { ref, uploadBytes, getDownloadURL, storage } = window.__firebase;
-  const storageRef = ref(storage, path);
-  const snapshot = await uploadBytes(storageRef, file);
-  return getDownloadURL(snapshot.ref);
+  try {
+    const { ref, uploadBytes, getDownloadURL, storage } = window.__firebase;
+    const storageRef = ref(storage, path);
+    const snapshot = await uploadBytes(storageRef, file);
+    return getDownloadURL(snapshot.ref);
+  } catch (error) {
+    console.warn('⚠️ Firebase storage upload failed, falling back to ImgBB:', error);
+    const { api } = await import('./api.js');
+    return api.uploadImage(file);
+  }
 }
 
 export function isConfigured() {
