@@ -312,6 +312,13 @@ input, select, textarea { font-family: inherit; }
   justify-content: space-between;
   align-items: center;
   transition: box-shadow var(--transition-base);
+  display: none; /* Hidden on mobile by default */
+}
+
+@media (min-width: 768px) {
+  .top-app-bar {
+    display: flex;
+  }
 }
 
 .top-app-bar.scrolled {

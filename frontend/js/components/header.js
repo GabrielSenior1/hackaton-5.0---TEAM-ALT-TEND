@@ -192,8 +192,8 @@ export function renderHeader(activePage = 'home') {
 export function renderBottomNav(activePage = 'home') {
   const items = [
     { id: 'home', label: 'Inicio', icon: 'home' },
+    { id: 'product', label: 'Tienda', icon: 'storefront' },
     { id: 'scanner', label: 'Escanear', icon: 'qr_code_scanner' },
-    { id: 'traceability', label: 'Rastreo', icon: 'verified_user' },
     { id: 'dashboard', label: 'Panel', icon: 'dashboard' },
   ];
 
@@ -202,9 +202,21 @@ export function renderBottomNav(activePage = 'home') {
       ${items.map(item => `
         <a class="bottom-nav__item ${activePage === item.id ? 'active' : ''}" data-nav="${item.id}">
           <span class="material-symbols-outlined">${item.icon}</span>
-          <span class="label-sm">${item.label}</span>
+          <span class="label-sm" style="font-size: 10px;">${item.label}</span>
         </a>
       `).join('')}
+      <!-- Mobile Cart Toggle -->
+      <a class="bottom-nav__item" id="btn-cart-toggle-mobile" style="position: relative;">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="label-sm" style="font-size: 10px;">Carrito</span>
+        <span id="cart-badge-count-mobile" style="
+          position: absolute; top: 0px; right: 4px;
+          background: var(--tertiary); color: var(--on-tertiary);
+          font-size: 9px; font-weight: 700; width: 16px; height: 16px;
+          border-radius: 50%; display: none; align-items: center; justify-content: center;
+          box-shadow: var(--shadow-sm); border: 1.5px solid var(--surface-container-low);
+        ">0</span>
+      </a>
     </nav>
   `;
 }
@@ -409,6 +421,7 @@ export function initHeader(appRouter) {
   };
 
   document.getElementById('btn-cart-toggle')?.addEventListener('click', openCart);
+  document.getElementById('btn-cart-toggle-mobile')?.addEventListener('click', openCart);
   document.getElementById('cart-close-btn')?.addEventListener('click', closeCart);
   cartBackdrop?.addEventListener('click', closeCart);
 
@@ -436,6 +449,7 @@ export function renderCartDrawerItems() {
   const container = document.getElementById('cart-drawer-items');
   const totalEl = document.getElementById('cart-drawer-total');
   const badge = document.getElementById('cart-badge-count');
+  const badgeMobile = document.getElementById('cart-badge-count-mobile');
   if (!container || !totalEl) return;
 
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -448,6 +462,14 @@ export function renderCartDrawerItems() {
       badge.style.display = 'flex';
     } else {
       badge.style.display = 'none';
+    }
+  }
+  if (badgeMobile) {
+    if (cartCount > 0) {
+      badgeMobile.textContent = cartCount;
+      badgeMobile.style.display = 'flex';
+    } else {
+      badgeMobile.style.display = 'none';
     }
   }
 
