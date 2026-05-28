@@ -8,12 +8,12 @@
 
 // Firebase config — Replace with your actual config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyACqc7-okw0dPfOU9CkTSL8ZECEZAwKazI",
+  authDomain: "kanku-635ca.firebaseapp.com",
+  projectId: "kanku-635ca",
+  storageBucket: "kanku-635ca.firebasestorage.app",
+  messagingSenderId: "538016429417",
+  appId: "1:538016429417:web:8952a62a56613bf3b979f8"
 };
 
 let firebaseApp = null;
