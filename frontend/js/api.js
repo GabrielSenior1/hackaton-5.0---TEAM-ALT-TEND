@@ -171,5 +171,43 @@ class ApiClient {
   }
 }
 
+/**
+ * Formatea un precio en USD de acuerdo a la divisa seleccionada en localStorage
+ * @param {number} priceInUSD El precio base en dólares
+ * @returns {string} El precio formateado con el símbolo de divisa correspondiente
+ */
+export function formatPrice(priceInUSD) {
+  const currency = localStorage.getItem('currency') || 'USD';
+  
+  // Tipos de cambio aproximados para demostración en local
+  const rates = {
+    'USD': 1.0,
+    'COP': 4000.0,
+    'EUR': 0.92,
+  };
+  
+  const rate = rates[currency] || 1.0;
+  const converted = priceInUSD * rate;
+  
+  if (currency === 'COP') {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(converted);
+  } else if (currency === 'EUR') {
+    return new Intl.NumberFormat('de-DE', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(converted);
+  } else {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(converted);
+  }
+}
+
 export const api = new ApiClient();
 export default api;

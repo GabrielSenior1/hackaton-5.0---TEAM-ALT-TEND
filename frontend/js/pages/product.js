@@ -153,8 +153,14 @@ export function initProduct() {
   document.getElementById('buy-btn')?.addEventListener('click', () => {
     const { showToast } = window.__components || {};
     
-    // Add item to cart in localStorage
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    // Add item to cart in localStorage safely
+    let cart = [];
+    try {
+      cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      if (!Array.isArray(cart)) cart = [];
+    } catch (e) {
+      cart = [];
+    }
     const itemIndex = cart.findIndex(item => item.id === 'bar-70');
     
     if (itemIndex > -1) {
