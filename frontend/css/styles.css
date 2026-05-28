@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Google Fonts ─────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 /* ── CSS Custom Properties (Design Tokens) ───────────────── */
@@ -100,7 +100,7 @@ html {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   color: var(--on-background);
@@ -145,21 +145,21 @@ input, select, textarea { font-family: inherit; }
 }
 
 .body-lg {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 18px;
   line-height: 28px;
   font-weight: 400;
 }
 
 .body-md {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 }
 
 .label-sm {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.1em;
@@ -460,7 +460,7 @@ input, select, textarea { font-family: inherit; }
   gap: 8px;
   padding: 14px 28px;
   border-radius: var(--radius-xl);
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -1107,4 +1107,38 @@ input, select, textarea { font-family: inherit; }
   .md-col-8 { grid-column: span 8; }
   .md-col-4 { grid-column: span 4; }
   .md-col-6 { grid-column: span 6; }
+}
+
+/* ── Accessibility: High Contrast Mode ─────────────────────── */
+body.high-contrast {
+  background: #000000 !important;
+  color: #00ff00 !important;
+}
+
+body.high-contrast * {
+  background-color: #000000 !important;
+  color: #00ff00 !important;
+  border-color: #00ff00 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+body.high-contrast a, 
+body.high-contrast button {
+  color: #ffff00 !important;
+  text-decoration: underline !important;
+}
+
+body.high-contrast a:hover, 
+body.high-contrast button:hover {
+  background-color: #333333 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast .btn-primary,
+body.high-contrast .btn-secondary,
+body.high-contrast .btn-gold {
+  border: 2px solid #00ff00 !important;
+  background-color: #000000 !important;
+  color: #ffff00 !important;
 }

@@ -3,7 +3,7 @@
  * Hash-based SPA router connecting all pages
  */
 
-import { renderHeader, renderBottomNav, showToast } from './components/header.js';
+import { renderHeader, renderBottomNav, showToast, initHeader } from './components/header.js';
 import { renderHome } from './pages/home.js';
 import { renderProduct, initProduct } from './pages/product.js';
 import { renderTraceability, initTraceability } from './pages/traceability.js';
@@ -76,6 +76,11 @@ function renderPage(pageId) {
 
   // Setup header scroll behavior
   setupScrollBehavior();
+
+  // Setup header selectors, cart, and accessibility
+  initHeader((hash) => {
+    renderPage(currentPage);
+  });
 
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'instant' });
