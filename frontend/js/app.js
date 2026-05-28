@@ -203,5 +203,9 @@ async function init() {
   navigate(pageId);
 }
 
-// Start the app
-document.addEventListener('DOMContentLoaded', init);
+// Start the app safely checking DOM state
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

@@ -12,8 +12,15 @@ export function renderHeader(activePage = 'home') {
     { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
   ];
 
-  // Retrieve current cart count
-  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  // Retrieve current cart count safely
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (!Array.isArray(cart)) cart = [];
+  } catch (e) {
+    cart = [];
+    localStorage.setItem('cart', '[]');
+  }
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   // Retrieve lang and currency from localStorage
@@ -456,7 +463,14 @@ export function renderCartDrawerItems() {
   const badgeMobile = document.getElementById('cart-badge-count-mobile');
   if (!container || !totalEl) return;
 
-  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (!Array.isArray(cart)) cart = [];
+  } catch (e) {
+    cart = [];
+    localStorage.setItem('cart', '[]');
+  }
   
   // Update badge count
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
