@@ -124,7 +124,7 @@ export async function initSellerDashboard() {
     const vendedor = await getVendedor(user.uid);
     if (vendedor?.nombreMarca) {
       const welcome = document.getElementById('seller-welcome-text');
-      if (welcome) welcome.textContent = \`Bienvenido, \${vendedor.nombreMarca}\`;
+      if (welcome) welcome.textContent = `Bienvenido, ${vendedor.nombreMarca}`;
     }
   } catch (e) { console.warn(e); }
 
@@ -153,7 +153,7 @@ export async function initSellerDashboard() {
 
     const setCount = (id, count) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = \`\${count} producto\${count !== 1 ? 's' : ''}\`;
+      if (el) el.textContent = `${count} producto${count !== 1 ? 's' : ''}`;
     };
     setCount('cat-count-cacao', cacaoCount);
     setCount('cat-count-cafe', cafeCount);
