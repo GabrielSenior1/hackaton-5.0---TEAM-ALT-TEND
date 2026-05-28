@@ -171,5 +171,16 @@ class ApiClient {
   }
 }
 
+export function formatPrice(priceUSD) {
+  const currency = localStorage.getItem('currency') || 'USD';
+  if (currency === 'COP') {
+    return `${(priceUSD * 4000).toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 })}`;
+  } else if (currency === 'EUR') {
+    return `${(priceUSD * 0.92).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}`;
+  } else {
+    return `${priceUSD.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`;
+  }
+}
+
 export const api = new ApiClient();
 export default api;

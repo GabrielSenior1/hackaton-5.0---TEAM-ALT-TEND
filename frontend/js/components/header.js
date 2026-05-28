@@ -26,8 +26,8 @@ export function renderHeader(activePage = 'home') {
   return `
     <header class="top-app-bar" id="top-app-bar">
       <a class="top-app-bar__brand" data-nav="home">
-        <span class="material-symbols-outlined filled" style="font-size: 28px;">spa</span>
-        <span class="top-app-bar__title" style="font-family: 'Playfair Display', serif; font-weight: 700; color: var(--secondary);">Cacao de la Sierra</span>
+        <span style="font-size: 24px;">🌿</span>
+        <span class="top-app-bar__title" style="font-family: 'Playfair Display', serif; font-weight: 700; color: var(--secondary);">KANKU</span>
       </a>
 
       <!-- Navigation Links for Desktop -->
@@ -37,6 +37,10 @@ export function renderHeader(activePage = 'home') {
             ${item.label}
           </a>
         `).join('')}
+        <a data-nav="seller-login" style="cursor: pointer; font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: var(--radius-full); background: var(--tertiary); color: var(--on-tertiary); display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+          <span class="material-symbols-outlined" style="font-size: 16px;">storefront</span>
+          Vender
+        </a>
       </nav>
 
       <!-- Amazon-Style Settings, Accessibility & Cart Controls -->
@@ -153,7 +157,7 @@ export function renderHeader(activePage = 'home') {
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 18px; margin-bottom: 18px;">
         <h3 class="headline-md" style="margin: 0; display: flex; align-items: center; gap: 8px; color: var(--secondary);">
           <span class="material-symbols-outlined" style="font-size: 26px;">shopping_cart</span>
-          Carrito de Compras
+          Carrito
         </h3>
         <button id="cart-close-btn" style="cursor: pointer; color: var(--on-surface-variant); background: none; border: none; display: flex; align-items: center;">
           <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
