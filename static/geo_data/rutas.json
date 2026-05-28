@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "nombre": "Ruta del Cacao Criollo",
+    "tipo": "cacao",
+    "descripcion": "Recorrido por las fincas de cacao criollo de la Sierra Nevada, desde Minca hasta San Pedro de la Sierra. Incluye degustación de cacao fresco y taller de fermentación.",
+    "inicio": {
+      "nombre": "Santa Marta - Centro Histórico",
+      "latitud": 11.2408,
+      "longitud": -74.1990
+    },
+    "fin": {
+      "nombre": "San Pedro de la Sierra",
+      "latitud": 11.1167,
+      "longitud": -73.9167
+    },
+    "paradas": [
+      {"nombre": "Minca", "latitud": 11.1431, "longitud": -74.1083, "tipo": "pueblo"},
+      {"nombre": "Finca Sierra Morena", "latitud": 11.1500, "longitud": -73.9500, "tipo": "finca"},
+      {"nombre": "Finca El Edén", "latitud": 11.1167, "longitud": -73.9167, "tipo": "finca"}
+    ],
+    "duracion_horas": 8,
+    "distancia_km": 65,
+    "dificultad": "moderada",
+    "precio_usd": 45,
+    "incluye": ["Transporte 4x4", "Almuerzo campesino", "Degustación de cacao", "Guía bilingüe"]
+  },
+  {
+    "id": 2,
+    "nombre": "Ruta Ancestral Arhuaca",
+    "tipo": "cacao",
+    "descripcion": "Experiencia cultural con la comunidad indígena Arhuaca. Conoce los métodos ancestrales de cultivo de cacao y la cosmovisión de los guardianes de la Sierra Nevada.",
+    "inicio": {
+      "nombre": "Valledupar",
+      "latitud": 10.4735,
+      "longitud": -73.2503
+    },
+    "fin": {
+      "nombre": "Nabusímake",
+      "latitud": 11.2000,
+      "longitud": -73.8000
+    },
+    "paradas": [
+      {"nombre": "Pueblo Bello", "latitud": 10.4167, "longitud": -73.5833, "tipo": "pueblo"},
+      {"nombre": "Finca Arhuaca", "latitud": 11.2000, "longitud": -73.8000, "tipo": "finca"}
+    ],
+    "duracion_horas": 12,
+    "distancia_km": 95,
+    "dificultad": "dificil",
+    "precio_usd": 75,
+    "incluye": ["Transporte", "Comida tradicional", "Ceremonia del cacao", "Guía indígena"]
+  },
+  {
+    "id": 3,
+    "nombre": "Ruta del Chocolate - Santa Marta",
+    "tipo": "mixta",
+    "descripcion": "Tour de medio día desde Santa Marta. Visita una finca de cacao, aprende el proceso del bean-to-bar y llévate tu propia tableta de chocolate artesanal.",
+    "inicio": {
+      "nombre": "Santa Marta - Rodadero",
+      "latitud": 11.2055,
+      "longitud": -74.2289
+    },
+    "fin": {
+      "nombre": "Minca",
+      "latitud": 11.1431,
+      "longitud": -74.1083
+    },
+    "paradas": [
+      {"nombre": "Finca Sierra Morena", "latitud": 11.1500, "longitud": -73.9500, "tipo": "finca"}
+    ],
+    "duracion_horas": 5,
+    "distancia_km": 25,
+    "dificultad": "facil",
+    "precio_usd": 30,
+    "incluye": ["Transporte", "Taller de chocolate", "Tableta artesanal", "Snacks"]
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "nombre": "Finca El Edén",
+    "productor": "Juan Carlos Mejía",
+    "latitud": 11.1167,
+    "longitud": -73.9167,
+    "altitud_msnm": 1200,
+    "municipio": "Ciénaga",
+    "vereda": "San Pedro de la Sierra",
+    "variedad_cacao": "Criollo",
+    "hectareas": 5.5,
+    "descripcion": "Finca familiar de tercera generación dedicada al cultivo de cacao criollo orgánico en las estribaciones de la Sierra Nevada.",
+    "certificaciones": ["Fairtrade", "Orgánica"]
+  },
+  {
+    "id": 2,
+    "nombre": "Finca La Esperanza",
+    "productor": "María Elena Torres",
+    "latitud": 11.0833,
+    "longitud": -73.8833,
+    "altitud_msnm": 900,
+    "municipio": "Ciénaga",
+    "vereda": "Palmor",
+    "variedad_cacao": "Trinitario",
+    "hectareas": 3.2,
+    "descripcion": "Finca de cacao trinitario con procesos de fermentación artesanal. La familia Torres lleva 40 años cultivando cacao de alta calidad.",
+    "certificaciones": ["Rainforest Alliance"]
+  },
+  {
+    "id": 3,
+    "nombre": "Finca Sierra Morena",
+    "productor": "Pedro Hernández",
+    "latitud": 11.1500,
+    "longitud": -73.9500,
+    "altitud_msnm": 1500,
+    "municipio": "Santa Marta",
+    "vereda": "Minca",
+    "variedad_cacao": "Criollo",
+    "hectareas": 8.0,
+    "descripcion": "En las alturas de Minca, esta finca produce cacao criollo con notas frutales únicas. Abierta a visitas turísticas.",
+    "certificaciones": ["Fairtrade", "Rainforest Alliance"]
+  },
+  {
+    "id": 4,
+    "nombre": "Finca Arhuaca",
+    "productor": "Comunidad Arhuaca",
+    "latitud": 11.2000,
+    "longitud": -73.8000,
+    "altitud_msnm": 1800,
+    "municipio": "Valledupar",
+    "vereda": "Nabusímake",
+    "variedad_cacao": "Criollo ancestral",
+    "hectareas": 12.0,
+    "descripcion": "Cacao ancestral cultivado por la comunidad indígena Arhuaca según métodos tradicionales milenarios de la Sierra Nevada.",
+    "certificaciones": ["Orgánica", "Comercio Justo"]
+  },
+  {
+    "id": 5,
+    "nombre": "Finca Río Claro",
+    "productor": "Andrés Villanueva",
+    "latitud": 11.0500,
+    "longitud": -73.9000,
+    "altitud_msnm": 600,
+    "municipio": "Aracataca",
+    "vereda": "El Retén",
+    "variedad_cacao": "Forastero mejorado",
+    "hectareas": 6.0,
+    "descripcion": "Finca en las tierras bajas cerca de Aracataca, tierra de Gabriel García Márquez. Cacao con notas de nuez y chocolate intenso.",
+    "certificaciones": ["Fairtrade"]
+  }
+]

@@ -1,0 +1,2 @@
+# Este directorio se usa para almacenar los QR generados dinámicamente.
+# Los archivos .png se ignoran en .gitignore.
