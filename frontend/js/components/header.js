@@ -33,8 +33,7 @@ export function renderHeader(activePage = 'product') {
   return `
     <header class="top-app-bar" id="top-app-bar">
       <a class="top-app-bar__brand" data-nav="home">
-        <span style="font-size: 24px;">🌿</span>
-        <span class="top-app-bar__title" style="font-family: 'Inter', sans-serif; font-weight: 700; color: var(--secondary);">KANKU</span>
+        <img src="https://i.postimg.cc/25xCXKX3/Kanku-Logo.png" alt="KANKU" style="height: 36px; width: auto; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));">
       </a>
 
       <!-- Navigation Links for Desktop -->
@@ -178,7 +177,7 @@ export function renderHeader(activePage = 'product') {
         </div>
         <button id="cart-drawer-checkout" style="
           width: 100%; padding: 16px; border-radius: var(--radius-xl); font-weight: 700; font-size: 15px;
-          background: linear-gradient(135deg, var(--secondary), var(--tertiary)); color: var(--on-secondary);
+          background: linear-gradient(135deg, #2e7d32, #43a047); color: #fff;
           border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
           box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.2s;
         " onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.15)'">

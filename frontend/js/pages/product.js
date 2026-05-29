@@ -17,8 +17,7 @@ export function renderProduct() {
       <!-- Compact Hero Banner -->
       <section class="hero-banner">
         <div class="hero-banner__logo">
-          <span>🌿</span>
-          <span class="gold-gradient-text">KANKU</span>
+          <img src="https://i.postimg.cc/25xCXKX3/Kanku-Logo.png" alt="KANKU" style="height: 80px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
         </div>
         <p class="hero-banner__subtitle">
           Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.
@@ -30,29 +29,23 @@ export function renderProduct() {
 
         <!-- Amazon-style Search Bar -->
         <section style="position: relative; max-width: 720px; margin: 0 auto; width: 100%;">
-          <div style="display: flex; width: 100%; box-shadow: var(--shadow-sm); border-radius: var(--radius-xl); overflow: hidden;">
-            <select id="search-category" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 0 14px; border: 1.5px solid var(--outline-variant); border-right: none; border-radius: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; outline: none; min-width: 130px; appearance: auto;">
+          <div class="search-bar">
+            <select id="search-category" class="search-bar__select">
               <option value="all">🌿 Todos los productos</option>
               <option value="cacao">🍫 Cacao</option>
               <option value="cafe">☕ Café</option>
               <option value="banano">🍌 Banano</option>
             </select>
-            <input type="text" id="search-input" placeholder="Buscar productos…" autocomplete="off" style="font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; border: 1.5px solid var(--outline-variant); border-left: none; border-right: none; outline: none; flex: 1; background: var(--surface-container-low); color: var(--on-surface);">
-            <button id="search-btn" style="font-family: 'Inter', sans-serif; background: var(--secondary); color: var(--on-secondary); border: 1.5px solid var(--secondary); padding: 0 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;">
+            <input type="text" id="search-input" placeholder="Buscar productos…" autocomplete="off" class="search-bar__input">
+            <button id="search-btn" class="search-bar__btn">
               <span class="material-symbols-outlined" style="font-size: 22px;">search</span>
             </button>
           </div>
-          <div id="search-suggestions" style="
-            position: absolute; top: 100%; left: 0; right: 0;
-            background: var(--surface-container-high); border: 1px solid var(--outline-variant);
-            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-            box-shadow: var(--shadow-lg); display: none; flex-direction: column;
-            z-index: 500; max-height: 240px; overflow-y: auto;
-          "></div>
+          <div id="search-suggestions" class="search-bar__suggestions"></div>
         </section>
 
         <!-- Products Grid -->
-        <section id="catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;">
+        <section id="catalog-grid" class="catalog-grid">
           <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
             <div class="spinner" style="margin: 0 auto 16px;"></div>
             <p class="body-md" style="color: var(--on-surface-variant);">${t('product.loading')}</p>
@@ -160,6 +153,7 @@ export async function initProduct() {
   }
   catalogCategory = searchSelect.value;
   catalogSearchText = searchInput.value.trim().toLowerCase();
+  updateSelectStyle();
 
   renderCatalog();
 
@@ -171,9 +165,20 @@ export async function initProduct() {
     hideSuggestions();
   }
 
+  function updateSelectStyle() {
+    if (searchSelect.value === 'all') {
+      searchSelect.style.color = 'var(--secondary)';
+      searchSelect.style.fontWeight = '700';
+    } else {
+      searchSelect.style.color = 'var(--on-surface)';
+      searchSelect.style.fontWeight = '500';
+    }
+  }
+
   searchSelect.addEventListener('change', () => {
     const labels = { all: 'Buscar productos…', cacao: 'Buscar en Cacao…', cafe: 'Buscar en Café…', banano: 'Buscar en Banano…' };
     searchInput.placeholder = labels[searchSelect.value] || 'Buscar productos…';
+    updateSelectStyle();
     doSearch();
   });
 
@@ -211,14 +216,10 @@ export async function initProduct() {
     suggestions.innerHTML = matches.map((p, i) => {
       const catEmoji = { cacao: '🍫', cafe: '☕', banano: '🍌' };
       return `
-        <button type="button" data-suggestion="${i}" style="
-          text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600;
-          border-bottom: ${i < matches.length - 1 ? '1px solid var(--outline-variant)' : 'none'};
-          cursor: pointer; display: flex; align-items: center; gap: 10px; background: transparent; color: var(--on-surface); border-left: none; border-right: none; border-top: none;
-        ">
+        <button type="button" class="search-bar__suggestion" data-suggestion="${i}">
           <span style="font-size: 20px;">${catEmoji[p.categoria] || '📦'}</span>
           <span style="flex: 1;">${p.nombre}</span>
-          <span style="font-weight: 400; color: var(--on-surface-variant); font-size: 12px;">${formatPrice(p.precio || 0)}</span>
+          <span class="search-bar__suggestion-price">${formatPrice(p.precio || 0)}</span>
         </button>
       `;
     }).join('');
@@ -298,26 +299,21 @@ async function renderCatalog() {
     const count = ratings?.length || 0;
 
     return `
-    <div class="card animate-fade-in-up stagger-${(idx % 5) + 1}" data-product-id="${product.id}" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; opacity: 0; cursor: pointer;">
-      <div style="width: 100%; height: 200px; background: var(--surface-container-low); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+    <div class="catalog-card animate-fade-in-up stagger-${(idx % 5) + 1}" data-product-id="${product.id}">
+      <div class="catalog-card__image-wrap">
         ${product.imagenUrl
-          ? `<img src="${product.imagenUrl}" alt="${product.nombre}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />`
-          : `<span style="font-size: 72px;">${catEmoji[product.categoria] || '📦'}</span>`
+          ? `<img src="${product.imagenUrl}" alt="${product.nombre}" class="catalog-card__image" />`
+          : `<div class="catalog-card__image catalog-card__image--placeholder"><span>${catEmoji[product.categoria] || '📦'}</span></div>`
         }
-        <span style="position: absolute; top: 10px; left: 10px; background: rgba(255,248,245,0.92); backdrop-filter: blur(4px); padding: 4px 12px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; color: var(--on-surface); border: 0.5px solid var(--outline-variant);">
-          ${catEmoji[product.categoria] || ''} ${(product.categoria || '').toUpperCase()}
-        </span>
+        <span class="catalog-card__badge">${catEmoji[product.categoria] || ''} ${(product.categoria || '').toUpperCase()}</span>
       </div>
-      <div style="padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1;">
-        <h4 style="font-weight: 700; font-size: 16px; color: var(--on-surface);">${product.nombre}</h4>
-        ${count > 0 ? `<div style="display: flex; align-items: center; gap: 6px;">${renderStars(avg)} <span style="font-size: 11px; color: var(--on-surface-variant);">${avg.toFixed(1)} (${count} ${count === 1 ? t('review.oneReview') : t('review.nReviews')})</span></div>` : ''}
-        <p style="font-size: 13px; color: var(--on-surface-variant); flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${product.descripcion || ''}</p>
-        ${product.vendedorNombre ? `<p style="font-size: 11px; color: var(--secondary); font-weight: 600; display: flex; align-items: center; gap: 4px;"><span class="material-symbols-outlined" style="font-size: 14px;">storefront</span> ${product.vendedorNombre}</p>` : ''}
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--outline-variant);">
-          <span style="font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 700; color: var(--secondary);">${formatPrice(product.precio || 0)}</span>
-          <button class="btn btn-primary catalog-add-cart" data-product-id="${product.id}" style="padding: 8px 16px; font-size: 11px; border-radius: var(--radius-lg);">
-            <span class="material-symbols-outlined" style="font-size: 16px;">add_shopping_cart</span>
-            ${t('product.add')}
+      <div class="catalog-card__body">
+        <h4 class="catalog-card__name">${product.nombre}</h4>
+        ${count > 0 ? `<div class="catalog-card__rating">${renderStars(avg)} <span>${avg.toFixed(1)}</span></div>` : ''}
+        <div class="catalog-card__footer">
+          <span class="catalog-card__price">${formatPrice(product.precio || 0)}</span>
+          <button class="btn btn-primary catalog-add-cart" data-product-id="${product.id}">
+            <span class="material-symbols-outlined" style="font-size: 14px;">add_shopping_cart</span>
           </button>
         </div>
       </div>
@@ -356,7 +352,7 @@ async function renderCatalog() {
   });
 
   // Product card click → open modal
-  grid.querySelectorAll('.card[data-product-id]').forEach(card => {
+  grid.querySelectorAll('.catalog-card[data-product-id]').forEach(card => {
     card.addEventListener('click', () => {
       const pid = card.dataset.productId;
       const product = catalogProducts.find(p => p.id === pid);
