@@ -28,17 +28,26 @@ export function renderProduct() {
       <main class="container" style="padding-bottom: 60px; display: flex; flex-direction: column; gap: 32px;">
 
         <!-- Amazon-style Search Bar -->
-        <section style="display: flex; max-width: 720px; margin: 0 auto; width: 100%; box-shadow: var(--shadow-sm); border-radius: var(--radius-xl); overflow: hidden;">
-          <select id="search-category" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 0 14px; border: 1.5px solid var(--outline-variant); border-right: none; border-radius: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; outline: none; min-width: 130px; appearance: auto;">
-            <option value="all">🌿 Todos los productos</option>
-            <option value="cacao">🍫 Cacao</option>
-            <option value="cafe">☕ Café</option>
-            <option value="banano">🍌 Banano</option>
-          </select>
-          <input type="text" id="search-input" placeholder="Buscar productos…" style="font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; border: 1.5px solid var(--outline-variant); border-left: none; border-right: none; outline: none; flex: 1; background: var(--surface-container-low); color: var(--on-surface);">
-          <button id="search-btn" style="font-family: 'Inter', sans-serif; background: var(--secondary); color: var(--on-secondary); border: 1.5px solid var(--secondary); padding: 0 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;">
-            <span class="material-symbols-outlined" style="font-size: 22px;">search</span>
-          </button>
+        <section style="position: relative; max-width: 720px; margin: 0 auto; width: 100%;">
+          <div style="display: flex; width: 100%; box-shadow: var(--shadow-sm); border-radius: var(--radius-xl); overflow: hidden;">
+            <select id="search-category" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 0 14px; border: 1.5px solid var(--outline-variant); border-right: none; border-radius: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; outline: none; min-width: 130px; appearance: auto;">
+              <option value="all">🌿 Todos los productos</option>
+              <option value="cacao">🍫 Cacao</option>
+              <option value="cafe">☕ Café</option>
+              <option value="banano">🍌 Banano</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Buscar productos…" autocomplete="off" style="font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; border: 1.5px solid var(--outline-variant); border-left: none; border-right: none; outline: none; flex: 1; background: var(--surface-container-low); color: var(--on-surface);">
+            <button id="search-btn" style="font-family: 'Inter', sans-serif; background: var(--secondary); color: var(--on-secondary); border: 1.5px solid var(--secondary); padding: 0 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;">
+              <span class="material-symbols-outlined" style="font-size: 22px;">search</span>
+            </button>
+          </div>
+          <div id="search-suggestions" style="
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: var(--surface-container-high); border: 1px solid var(--outline-variant);
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+            box-shadow: var(--shadow-lg); display: none; flex-direction: column;
+            z-index: 500; max-height: 240px; overflow-y: auto;
+          "></div>
         </section>
 
         <!-- Products Grid -->
@@ -98,8 +107,32 @@ let catalogCategory = 'all';
 let catalogSearchText = '';
 let vendedorCache = {};
 
+function debounce(fn, ms) {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+}
+
+function getSearchParams() {
+  const match = window.location.hash.match(/[?&]q=([^&]*)/);
+  const catMatch = window.location.hash.match(/[?&]cat=([^&]*)/);
+  return {
+    q: match ? decodeURIComponent(match[1]) : '',
+    cat: catMatch ? decodeURIComponent(catMatch[1]) : 'all',
+  };
+}
+
+function updateURL(cat, q) {
+  const base = '#product';
+  const params = [];
+  if (q) params.push('q=' + encodeURIComponent(q));
+  if (cat && cat !== 'all') params.push('cat=' + encodeURIComponent(cat));
+  const newHash = params.length ? base + '?' + params.join('&') : base;
+  if (window.location.hash !== newHash) {
+    window.location.hash = newHash;
+  }
+}
+
 export async function initProduct() {
-  // Load all products from Firestore
   try {
     catalogProducts = await getAllProductos();
   } catch (e) {
@@ -107,25 +140,36 @@ export async function initProduct() {
     catalogProducts = getDemoProducts();
   }
 
-  // If no products in Firestore, show demo
   if (catalogProducts.length === 0) {
     catalogProducts = getDemoProducts();
   }
 
-  renderCatalog();
-
-  // Search bar logic
   const searchSelect = document.getElementById('search-category');
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
+  const suggestions = document.getElementById('search-suggestions');
+
+  // Restore search from URL
+  const params = getSearchParams();
+  if (params.cat && params.cat !== 'all') {
+    searchSelect.value = params.cat;
+  }
+  if (params.q) {
+    searchInput.value = params.q;
+  }
+  catalogCategory = searchSelect.value;
+  catalogSearchText = searchInput.value.trim().toLowerCase();
+
+  renderCatalog();
 
   function doSearch() {
     catalogCategory = searchSelect.value;
     catalogSearchText = searchInput.value.trim().toLowerCase();
     renderCatalog();
+    updateURL(catalogCategory, catalogSearchText);
+    hideSuggestions();
   }
 
-  // Update placeholder when category changes
   searchSelect.addEventListener('change', () => {
     const labels = { all: 'Buscar productos…', cacao: 'Buscar en Cacao…', cafe: 'Buscar en Café…', banano: 'Buscar en Banano…' };
     searchInput.placeholder = labels[searchSelect.value] || 'Buscar productos…';
@@ -133,7 +177,74 @@ export async function initProduct() {
   });
 
   searchBtn.addEventListener('click', doSearch);
-  searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
+  searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { doSearch(); hideSuggestions(); } });
+
+  // Debounced real-time search on input
+  const debouncedSearch = debounce(() => {
+    catalogCategory = searchSelect.value;
+    catalogSearchText = searchInput.value.trim().toLowerCase();
+    renderCatalog();
+    updateURL(catalogCategory, catalogSearchText);
+  }, 300);
+
+  searchInput.addEventListener('input', () => {
+    showSuggestions(searchInput.value);
+    debouncedSearch();
+  });
+
+  // Autocomplete suggestions
+  function showSuggestions(text) {
+    const txt = text.trim().toLowerCase();
+    if (!txt || catalogProducts.length === 0) { hideSuggestions(); return; }
+
+    let pool = catalogCategory === 'all'
+      ? catalogProducts
+      : catalogProducts.filter(p => p.categoria === catalogCategory);
+
+    const matches = pool
+      .filter(p => (p.nombre || '').toLowerCase().includes(txt))
+      .slice(0, 5);
+
+    if (matches.length === 0) { hideSuggestions(); return; }
+
+    suggestions.innerHTML = matches.map((p, i) => {
+      const catEmoji = { cacao: '🍫', cafe: '☕', banano: '🍌' };
+      return `
+        <button type="button" data-suggestion="${i}" style="
+          text-align: left; padding: 10px 16px; font-size: 13px; font-weight: 600;
+          border-bottom: ${i < matches.length - 1 ? '1px solid var(--outline-variant)' : 'none'};
+          cursor: pointer; display: flex; align-items: center; gap: 10px; background: transparent; color: var(--on-surface); border-left: none; border-right: none; border-top: none;
+        ">
+          <span style="font-size: 20px;">${catEmoji[p.categoria] || '📦'}</span>
+          <span style="flex: 1;">${p.nombre}</span>
+          <span style="font-weight: 400; color: var(--on-surface-variant); font-size: 12px;">${formatPrice(p.precio || 0)}</span>
+        </button>
+      `;
+    }).join('');
+
+    suggestions.style.display = 'flex';
+
+    suggestions.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = matches[parseInt(btn.dataset.suggestion)];
+        if (p) {
+          searchInput.value = p.nombre;
+          doSearch();
+        }
+      });
+    });
+  }
+
+  function hideSuggestions() {
+    suggestions.style.display = 'none';
+    suggestions.innerHTML = '';
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#search-input') && !e.target.closest('#search-suggestions')) {
+      hideSuggestions();
+    }
+  });
 }
 
 async function renderCatalog() {
