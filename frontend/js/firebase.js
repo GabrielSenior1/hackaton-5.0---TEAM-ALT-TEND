@@ -284,6 +284,59 @@ export async function updatePedido(id, data) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// REVIEWS CRUD (Firestore: "reviews")
+// ═══════════════════════════════════════════════════════════
+
+export async function createReview(data) {
+  if (!isFirebaseReady) throw new Error('Firebase not ready');
+  const { collection, addDoc, serverTimestamp } = window.__firebase;
+  return addDoc(collection(db, 'reviews'), {
+    ...data,
+    fecha: serverTimestamp(),
+  });
+}
+
+export async function getReviewsByProduct(productId) {
+  if (!isFirebaseReady) return [];
+  const { collection, query, where, getDocs, orderBy } = window.__firebase;
+  const q = query(
+    collection(db, 'reviews'),
+    where('productId', '==', productId),
+    orderBy('fecha', 'desc')
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+export async function getReviewsForProducts(productIds) {
+  if (!isFirebaseReady || productIds.length === 0) return {};
+  const { collection, getDocs } = window.__firebase;
+  const snap = await getDocs(collection(db, 'reviews'));
+  const result = {};
+  snap.docs.forEach(d => {
+    const data = d.data();
+    if (productIds.includes(data.productId)) {
+      if (!result[data.productId]) result[data.productId] = [];
+      result[data.productId].push(data.rating || 0);
+    }
+  });
+  return result;
+}
+
+export async function getReviewByUserAndProduct(compradorUid, productId) {
+  if (!isFirebaseReady) return null;
+  const { collection, query, where, getDocs } = window.__firebase;
+  const q = query(
+    collection(db, 'reviews'),
+    where('compradorUid', '==', compradorUid),
+    where('productId', '==', productId)
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  return { id: snap.docs[0].id, ...snap.docs[0].data() };
+}
+
+// ═══════════════════════════════════════════════════════════
 // FIREBASE STORAGE — Image upload
 // ═══════════════════════════════════════════════════════════
 
@@ -341,6 +394,7 @@ export default {
   syncCartToFirestore, loadCartFromFirestore,
   createProducto, getProducto, getProductosByVendedor, getAllProductos, updateProducto, deleteProducto,
   createPedido, getPedidosByVendedor, getPedidosByComprador, updatePedido,
+  createReview, getReviewsByProduct, getReviewsForProducts, getReviewByUserAndProduct,
   uploadPhoto,
   subscribeSensorData,
   isConfigured,

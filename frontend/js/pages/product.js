@@ -3,7 +3,7 @@
  * Shows all products from all sellers with category filtering
  */
 import { formatPrice } from '../api.js';
-import { getAllProductos, getVendedor } from '../firebase.js';
+import { getAllProductos, getVendedor, getReviewsForProducts } from '../firebase.js';
 import { updateCartBadge } from '../components/header.js';
 
 export function renderProduct() {
@@ -247,6 +247,8 @@ export async function initProduct() {
   });
 }
 
+let catalogReviews = {};
+
 async function renderCatalog() {
   const grid = document.getElementById('catalog-grid');
   if (!grid) return;
@@ -272,9 +274,29 @@ async function renderCatalog() {
     return;
   }
 
+  // Fetch reviews for displayed products
+  try {
+    const ids = filtered.map(p => p.id).filter(Boolean);
+    catalogReviews = await getReviewsForProducts(ids);
+  } catch (e) {
+    catalogReviews = {};
+  }
+
+  function renderStars(avg) {
+    const full = Math.round(avg);
+    return [1,2,3,4,5].map(i =>
+      `<span style="font-size: 14px; color: ${i <= full ? 'var(--secondary)' : 'var(--outline-variant)'};">★</span>`
+    ).join('');
+  }
+
   const catEmoji = { cacao: '🍫', cafe: '☕', banano: '🍌' };
 
-  grid.innerHTML = filtered.map((product, idx) => `
+  grid.innerHTML = filtered.map((product, idx) => {
+    const ratings = catalogReviews[product.id];
+    const avg = ratings?.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+    const count = ratings?.length || 0;
+
+    return `
     <div class="card animate-fade-in-up stagger-${(idx % 5) + 1}" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; opacity: 0; cursor: pointer;">
       <div style="width: 100%; height: 200px; background: var(--surface-container-low); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
         ${product.imagenUrl
@@ -287,6 +309,7 @@ async function renderCatalog() {
       </div>
       <div style="padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1;">
         <h4 style="font-weight: 700; font-size: 16px; color: var(--on-surface);">${product.nombre}</h4>
+        ${count > 0 ? `<div style="display: flex; align-items: center; gap: 6px;">${renderStars(avg)} <span style="font-size: 11px; color: var(--on-surface-variant);">${avg.toFixed(1)} (${count} ${count === 1 ? t('review.oneReview') : t('review.nReviews')})</span></div>` : ''}
         <p style="font-size: 13px; color: var(--on-surface-variant); flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${product.descripcion || ''}</p>
         ${product.vendedorNombre ? `<p style="font-size: 11px; color: var(--secondary); font-weight: 600; display: flex; align-items: center; gap: 4px;"><span class="material-symbols-outlined" style="font-size: 14px;">storefront</span> ${product.vendedorNombre}</p>` : ''}
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--outline-variant);">
@@ -298,7 +321,7 @@ async function renderCatalog() {
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 
   // Add to cart listeners
   grid.querySelectorAll('.catalog-add-cart').forEach(btn => {
@@ -321,6 +344,7 @@ async function renderCatalog() {
           image: product.imagenUrl || '',
           categoria: product.categoria,
           vendedorUid: product.vendedorUid,
+          vendedorNombre: product.vendedorNombre || '',
         });
       }
 
@@ -342,6 +366,7 @@ function getDemoProducts() {
       stock: 50,
       imagenUrl: '',
       vendedorNombre: 'Finca El Mirador',
+      vendedorUid: 'demo-vendedor-1',
       activo: true,
     },
     {
@@ -353,6 +378,7 @@ function getDemoProducts() {
       stock: 100,
       imagenUrl: '',
       vendedorNombre: 'Kankuamo Cacao',
+      vendedorUid: 'demo-vendedor-2',
       activo: true,
     },
     {
@@ -364,6 +390,7 @@ function getDemoProducts() {
       stock: 75,
       imagenUrl: '',
       vendedorNombre: 'Sierra Coffee Co.',
+      vendedorUid: 'demo-vendedor-3',
       activo: true,
     },
     {
@@ -375,6 +402,7 @@ function getDemoProducts() {
       stock: 60,
       imagenUrl: '',
       vendedorNombre: 'Café Kankuamo',
+      vendedorUid: 'demo-vendedor-4',
       activo: true,
     },
     {
@@ -386,6 +414,7 @@ function getDemoProducts() {
       stock: 30,
       imagenUrl: '',
       vendedorNombre: 'BanaMag Export',
+      vendedorUid: 'demo-vendedor-5',
       activo: true,
     },
     {
@@ -397,6 +426,7 @@ function getDemoProducts() {
       stock: 200,
       imagenUrl: '',
       vendedorNombre: 'Sierra Snacks',
+      vendedorUid: 'demo-vendedor-6',
       activo: true,
     },
   ];

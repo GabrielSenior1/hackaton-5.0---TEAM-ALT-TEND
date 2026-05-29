@@ -2,6 +2,7 @@
  * 🏠 Reusable Header Component with Cart, Language, Currency, and Accessibility Controls
  */
 import { formatPrice } from '../api.js';
+import { createPedido, getCurrentUser } from '../firebase.js';
 
 export function renderHeader(activePage = 'product') {
   const navItems = [
@@ -434,19 +435,58 @@ export function initHeader(appRouter) {
   document.getElementById('cart-close-btn')?.addEventListener('click', closeCart);
   cartBackdrop?.addEventListener('click', closeCart);
 
-  // checkout actions
-  document.getElementById('cart-drawer-checkout')?.addEventListener('click', () => {
+  // checkout actions — multi-vendor: one pedido per seller
+  document.getElementById('cart-drawer-checkout')?.addEventListener('click', async () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
       showToast(t('header.cartCheckoutEmpty'), 'error');
       return;
     }
+
+    const user = getCurrentUser();
+    if (!user) {
+      showToast(t('header.loginRequired'), 'error');
+      return;
+    }
+
+    const groups = {};
+    cart.forEach(item => {
+      const uid = item.vendedorUid || 'unknown';
+      if (!groups[uid]) groups[uid] = { vendedorUid: uid, vendedorNombre: item.vendedorNombre || 'Vendedor', items: [] };
+      groups[uid].items.push({
+        nombre: item.name,
+        precio: item.price,
+        cantidad: item.quantity,
+        productId: item.id,
+        imagenUrl: item.image || '',
+      });
+    });
+
     closeCart();
-    
-    showToast(t('header.cartRedirect'), 'success');
-    setTimeout(() => {
-      window.location.hash = '#/product'; // Redirect to store checkout view
-    }, 1000);
+
+    try {
+      let successCount = 0;
+      for (const group of Object.values(groups)) {
+        const total = group.items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
+        await createPedido({
+          vendedorUid: group.vendedorUid,
+          vendedorNombre: group.vendedorNombre,
+          compradorUid: user.uid,
+          compradorNombre: user.displayName || user.email || 'Anónimo',
+          compradorEmail: user.email || '',
+          items: group.items,
+          total,
+        });
+        successCount++;
+      }
+
+      localStorage.setItem('cart', '[]');
+      updateCartBadge();
+      showToast(`${successCount} ${t('header.cartCheckoutSuccess')}`, 'success');
+    } catch (e) {
+      console.error('Checkout error:', e);
+      showToast(t('header.cartCheckoutError'), 'error');
+    }
   });
 }
 
@@ -512,28 +552,45 @@ export function renderCartDrawerItems() {
     return;
   }
 
-  let subtotal = 0;
-  container.innerHTML = cart.map((item, index) => {
-    const itemTotal = item.price * item.quantity;
-    subtotal += itemTotal;
-    return `
-      <div style="display: flex; align-items: center; gap: 14px; background: var(--surface-container-low); padding: 12px; border-radius: var(--radius-xl); border: 1px solid var(--outline-variant);">
-        <img src="${item.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-lg);" />
-        <div style="flex: 1; min-width: 0;">
-          <p style="font-weight: 700; font-size: 13px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</p>
-          <p style="font-size: 12px; font-weight: 600; color: var(--secondary); margin-top: 2px;">${formatPrice(item.price)} ${t('header.perUnit')}</p>
-        </div>
-        
-        <!-- Qty controls -->
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <button class="cart-qty-btn-minus" data-idx="${index}" style="width: 24px; height: 24px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer;">-</button>
-          <span style="font-size: 13px; font-weight: 700; min-width: 14px; text-align: center;">${item.quantity}</span>
-          <button class="cart-qty-btn-plus" data-idx="${index}" style="width: 24px; height: 24px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer;">+</button>
-        </div>
+  // Group by seller
+  const groups = {};
+  cart.forEach((item, index) => {
+    const uid = item.vendedorUid || 'unknown';
+    if (!groups[uid]) groups[uid] = { vendedorNombre: item.vendedorNombre || 'Vendedor', items: [], indexOffset: index };
+    groups[uid].items.push({ ...item, localIdx: index });
+  });
 
-        <button class="cart-delete-btn" data-idx="${index}" style="color: var(--error); padding: 4px; cursor: pointer; display: flex; align-items: center; background: none; border: none;" title="${t('header.cartDelete')}">
-          <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
-        </button>
+  let subtotal = 0;
+  container.innerHTML = Object.entries(groups).map(([uid, group]) => {
+    const sellerTotal = group.items.reduce((s, i) => s + (i.price * i.quantity), 0);
+    return `
+      <div style="margin-bottom: 8px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
+          <span class="material-symbols-outlined" style="font-size: 14px;">storefront</span>
+          ${group.vendedorNombre}
+        </p>
+        ${group.items.map((item, gIdx) => {
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
+          return `
+            <div style="display: flex; align-items: center; gap: 10px; background: var(--surface-container-low); padding: 10px; border-radius: var(--radius-lg); border: 1px solid var(--outline-variant); margin-bottom: 6px;">
+              <img src="${item.image}" style="width: 42px; height: 42px; object-fit: cover; border-radius: var(--radius-lg);" />
+              <div style="flex: 1; min-width: 0;">
+                <p style="font-weight: 700; font-size: 12px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</p>
+                <p style="font-size: 11px; font-weight: 600; color: var(--secondary);">${formatPrice(item.price)} ${t('header.perUnit')}</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button class="cart-qty-btn-minus" data-idx="${item.localIdx}" style="width: 22px; height: 22px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;">-</button>
+                <span style="font-size: 12px; font-weight: 700; min-width: 12px; text-align: center;">${item.quantity}</span>
+                <button class="cart-qty-btn-plus" data-idx="${item.localIdx}" style="width: 22px; height: 22px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;">+</button>
+              </div>
+              <button class="cart-delete-btn" data-idx="${item.localIdx}" style="color: var(--error); padding: 2px; cursor: pointer; display: flex; align-items: center; background: none; border: none;" title="${t('header.cartDelete')}">
+                <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+              </button>
+            </div>
+          `;
+        }).join('')}
+        <p style="font-size: 11px; font-weight: 600; color: var(--on-surface-variant); text-align: right; margin-top: 2px;">${t('orders.total')}: ${formatPrice(sellerTotal)}</p>
       </div>
     `;
   }).join('');
