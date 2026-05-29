@@ -29,6 +29,13 @@ export async function updateVendedor(uid, data) {
   return updateDoc(doc(db, 'vendedores', uid), data);
 }
 
+export async function getAllVendedores() {
+  if (!isFirebaseReady) return [];
+  const { collection, getDocs } = window.__firebase;
+  const snap = await getDocs(collection(db, 'vendedores'));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
 // ═══════════════════════════════════════════════════════════
 // COMPRADORES (Firestore: "compradores")
 // ═══════════════════════════════════════════════════════════

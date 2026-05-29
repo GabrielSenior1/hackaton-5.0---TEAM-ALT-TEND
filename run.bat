@@ -6,49 +6,13 @@ echo ==================================================
 echo   🌿 Iniciando Cacao de la Sierra API Backend 🌿
 echo ==================================================
 
-:: 1. Detectar comando de Python a usar (Priorizando versiones estables y compatibles como 3.12 y 3.11)
-set PYTHON_CMD=
-echo [INFO] Detectando version de Python compatible...
-
-py -3.12 --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=py -3.12
-    echo [INFO] Se detecto Python 3.12. Usando 'py -3.12'.
-    goto check_env
-)
-
-py -3.11 --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=py -3.11
-    echo [INFO] Se detecto Python 3.11. Usando 'py -3.11'.
-    goto check_env
-)
-
-py -3.13 --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=py -3.13
-    echo [INFO] Se detecto Python 3.13. Usando 'py -3.13'.
-    goto check_env
-)
-
-py --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=py
-    echo [INFO] Se detecto el lanzador 'py' (usara version por defecto).
-    goto check_env
-)
-
+:: Detectar python
+set PYTHON_CMD=python
 python --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=python
-    echo [INFO] Usando comando 'python' del sistema.
-    goto check_env
+if errorlevel 1 (
+    set PYTHON_CMD=py
 )
 
-echo [ERROR] No se encontro Python en el sistema.
-echo Por favor instala Python o asegurate de que este en las variables de entorno (PATH).
-pause
-exit /b 1
 
 :check_env
 :: 2. Verificar si existe el archivo .env, si no, crearlo desde .env.example

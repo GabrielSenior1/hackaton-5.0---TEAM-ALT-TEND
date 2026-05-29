@@ -7,9 +7,9 @@ import { createPedido, getCurrentUser } from '../firebase.js';
 export function renderHeader(activePage = 'product') {
   const navItems = [
     { id: 'product', label: t('nav.product'), icon: 'storefront' },
-    { id: 'traceability', label: t('nav.traceability'), icon: 'verified_user' },
+    { id: 'stores', label: t('nav.stores'), icon: 'store' },
+    { id: 'model3d', label: t('nav.models3d'), icon: 'view_in_ar' },
     { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
-    { id: 'dashboard', label: t('nav.dashboard'), icon: 'dashboard' },
   ];
 
   // Retrieve current cart count safely
@@ -131,12 +131,9 @@ export function renderHeader(activePage = 'product') {
           </div>
         </div>
 
-        <!-- Cart Icon Button -->
         <button id="btn-cart-toggle" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface-container-highest); border: 0.5px solid var(--outline-variant); cursor: pointer;" title="${t('header.viewCart')}">
           <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 20px;">shopping_cart</span>
-          ${cartCount > 0 ? `
-            <span id="cart-badge-count" class="cart-badge">${cartCount}</span>
-          ` : ''}
+          <span id="cart-badge-count" class="cart-badge" style="display: ${cartCount > 0 ? 'flex' : 'none'};">${cartCount}</span>
         </button>
 
         <!-- Mobile Menu btn -->
@@ -208,8 +205,8 @@ export function renderBottomNav(activePage = 'home') {
 
   const items = [
     { id: 'product', label: t('nav.product'), icon: 'storefront' },
-    { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
-    { id: 'dashboard', label: t('nav.panel'), icon: 'dashboard' },
+    { id: 'stores', label: t('nav.stores'), icon: 'store' },
+    { id: 'model3d', label: t('nav.models3d'), icon: 'view_in_ar' },
   ];
 
   return `
@@ -252,6 +249,21 @@ export function renderBottomNav(activePage = 'home') {
             ${code === currency ? '<span class="material-symbols-outlined" style="font-size: 14px; color: var(--secondary); margin-left: auto;">check</span>' : ''}
           </button>
         `).join('')}
+
+        <div style="height:1px;background:var(--outline-variant);margin:4px 0;"></div>
+
+        <button class="mobile-more-menu__opt" data-nav="scanner">
+          <span class="material-symbols-outlined" style="font-size: 16px;">qr_code_scanner</span>
+          <span>${t('nav.scanner')}</span>
+        </button>
+        <button class="mobile-more-menu__opt" data-nav="dashboard">
+          <span class="material-symbols-outlined" style="font-size: 16px;">dashboard</span>
+          <span>${t('nav.dashboard')}</span>
+        </button>
+        <button class="mobile-more-menu__opt" data-nav="traceability">
+          <span class="material-symbols-outlined" style="font-size: 16px;">verified_user</span>
+          <span>${t('nav.traceability')}</span>
+        </button>
 
         <div style="height:1px;background:var(--outline-variant);margin:4px 0;"></div>
 

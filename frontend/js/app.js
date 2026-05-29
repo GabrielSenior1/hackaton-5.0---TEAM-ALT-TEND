@@ -14,6 +14,8 @@ import { renderStory, initStory } from './pages/story.js';
 import { renderScanner, initScanner, cleanupScanner } from './pages/scanner.js';
 import { renderDashboard, initDashboard } from './pages/dashboard.js';
 import { renderModel3D, initModel3D } from './pages/model3d.js';
+import { renderStores, initStores } from './pages/stores.js';
+import { renderStoreDetail, initStoreDetail } from './pages/store-detail.js';
 import { renderSellerLogin, initSellerLogin } from './pages/seller-login.js';
 import { renderSellerDashboard, initSellerDashboard } from './pages/seller-dashboard.js';
 import { renderSellerProducts, initSellerProducts } from './pages/seller-products.js';
@@ -24,13 +26,15 @@ import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
 
 // ── Page Registry ────────────────────────────────────────
 const consumerPages = {
-  product:      { render: renderProduct,      init: initProduct,       title: () => t('nav.product') },
-  traceability: { render: renderTraceability, init: initTraceability,  title: () => t('nav.traceability') },
-  story:        { render: renderStory,        init: initStory,         title: 'Story' },
-  scanner:      { render: renderScanner,      init: initScanner,       title: () => t('nav.scanner') },
-  dashboard:    { render: renderDashboard,    init: initDashboard,     title: () => t('nav.dashboard') },
-  model3d:      { render: renderModel3D,      init: initModel3D,       title: '3D' },
-  checkout:     { render: renderCheckout,     init: initCheckout,      title: 'Finalizar Compra' },
+  product:        { render: renderProduct,      init: initProduct,       title: () => t('nav.product') },
+  stores:         { render: renderStores,       init: initStores,        title: () => t('nav.stores') },
+  'store-detail': { render: renderStoreDetail,  init: initStoreDetail,   title: () => t('nav.stores') },
+  traceability:   { render: renderTraceability, init: initTraceability,  title: () => t('nav.traceability') },
+  story:          { render: renderStory,        init: initStory,         title: 'Story' },
+  scanner:        { render: renderScanner,      init: initScanner,       title: () => t('nav.scanner') },
+  dashboard:      { render: renderDashboard,    init: initDashboard,     title: () => t('nav.dashboard') },
+  model3d:        { render: renderModel3D,      init: initModel3D,       title: () => t('nav.models3d') },
+  checkout:       { render: renderCheckout,     init: initCheckout,      title: 'Finalizar Compra' },
 };
 
 const sellerPages = {
@@ -54,11 +58,14 @@ function getPageFromHash() {
   
   if (!hash) hash = 'product';
 
+  // Strip query params from hash (e.g. "store-detail?uid=xxx" → "store-detail")
+  const baseHash = hash.split('?')[0];
+
   // Map seller routes
-  if (hash.startsWith('seller')) {
-    return sellerPages[hash] ? hash : 'seller-login';
+  if (baseHash.startsWith('seller')) {
+    return sellerPages[baseHash] ? baseHash : 'seller-login';
   }
-  return consumerPages[hash] ? hash : 'product';
+  return consumerPages[baseHash] ? baseHash : 'product';
 }
 
 function isSellerPage(pageId) {
@@ -133,8 +140,9 @@ function renderPage(pageId) {
           </div>
           <div class="site-footer__links">
             <h4>${t('header.accessibility')}</h4>
+            <a data-nav="stores">${t('nav.stores')}</a>
+            <a data-nav="model3d">${t('nav.models3d')}</a>
             <a data-nav="traceability">${t('nav.traceability')}</a>
-            <a data-nav="story">Story</a>
           </div>
         </div>
         <div class="site-footer__bottom">
@@ -232,7 +240,8 @@ async function init() {
   // Listen for hash changes
   window.addEventListener('hashchange', () => {
     const pageId = getPageFromHash();
-    if (pageId !== currentPage) {
+    // Always re-render store-detail (UID in query may change), or when page changes
+    if (pageId !== currentPage || pageId === 'store-detail') {
       if (currentPage === 'scanner') cleanupScanner();
       currentPage = pageId;
       renderPage(pageId);
