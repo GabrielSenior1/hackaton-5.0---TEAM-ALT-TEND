@@ -3,6 +3,9 @@
  * Hash-based SPA router connecting consumer and seller portals
  */
 
+import { t } from './translations.js';
+window.t = t;
+
 import { renderHeader, renderBottomNav, showToast, initHeader } from './components/header.js';
 import { renderSellerHeader, initSellerHeader } from './components/seller-header.js';
 import { renderHome } from './pages/home.js';
@@ -18,8 +21,6 @@ import { renderSellerProducts, initSellerProducts } from './pages/seller-product
 import { renderSellerOrders, initSellerOrders } from './pages/seller-orders.js';
 import { renderSellerBrand, initSellerBrand } from './pages/seller-brand.js';
 import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
-import { t } from './translations.js';
-window.t = t;
 
 // ── Page Registry ────────────────────────────────────────
 const consumerPages = {
