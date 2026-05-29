@@ -129,12 +129,17 @@ export function renderSellerProducts() {
 
 let currentFilter = 'all';
 let allProducts = [];
+let lastVisibleProduct = null;
+let hasMoreProducts = true;
 
 export async function initSellerProducts() {
   const user = getCurrentUser();
   if (!user) return;
 
   // Load products
+  allProducts = [];
+  lastVisibleProduct = null;
+  hasMoreProducts = true;
   await loadProducts(user.uid);
 
   // Add product button
@@ -180,16 +185,37 @@ export async function initSellerProducts() {
   });
 }
 
-async function loadProducts(uid) {
+async function loadProducts(uid, loadMore = false) {
+  if (!hasMoreProducts && loadMore) return;
+  
   try {
-    allProducts = await getProductosByVendedor(uid);
+    const btnLoadMore = document.getElementById('btn-load-more-products');
+    if (btnLoadMore) {
+      btnLoadMore.disabled = true;
+      btnLoadMore.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
+    }
+
+    const { data, lastVisible } = await getProductosByVendedor(uid, 10, lastVisibleProduct);
+    
+    if (data.length < 10) {
+      hasMoreProducts = false;
+    }
+    
+    lastVisibleProduct = lastVisible;
+
+    if (loadMore) {
+      allProducts = [...allProducts, ...data];
+    } else {
+      allProducts = data;
+    }
+    
     renderProductsGrid();
   } catch (e) {
     console.error('Error loading products:', e);
     document.getElementById('seller-products-grid').innerHTML = `
       <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--error);">error</span>
-        <p class="body-md" style="color: var(--error); margin-top: 8px;">${t('seller.products.errorLoading')}</p>
+        <p class="body-md" style="color: var(--error); margin-top: 8px;">${t('seller.products.errorLoading') || 'Error al cargar'}</p>
       </div>
     `;
   }
@@ -250,6 +276,21 @@ function renderProductsGrid() {
       </div>
     </div>
   `).join('');
+
+  if (hasMoreProducts) {
+    grid.innerHTML += `
+      <div style="grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 20px;">
+        <button id="btn-load-more-products" class="btn btn-secondary" style="padding: 10px 24px; border-radius: var(--radius-xl);">
+          Cargar más
+        </button>
+      </div>
+    `;
+    
+    document.getElementById('btn-load-more-products')?.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (user) loadProducts(user.uid, true);
+    });
+  }
 
   // Attach edit listeners
   grid.querySelectorAll('.btn-edit-product').forEach(btn => {
@@ -347,6 +388,10 @@ async function saveProduct(uid) {
     }
 
     closeModal();
+    // Reload from scratch to reflect changes properly
+    allProducts = [];
+    lastVisibleProduct = null;
+    hasMoreProducts = true;
     await loadProducts(uid);
   } catch (e) {
     console.error('Error saving product:', e);

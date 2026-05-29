@@ -39,7 +39,7 @@ export function renderSellerLogin() {
           <form id="login-form" style="display: flex; flex-direction: column; gap: 18px;">
             <div class="form-field">
               <label class="form-field__label" for="login-email">${t('seller.login.email')}</label>
-              <input type="email" id="login-email" class="form-field__input" placeholder="tu@correo.com" required
+              <input type="text" id="login-email" class="form-field__input" placeholder="tu@correo.com o usuario admin" required
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <div class="form-field">
@@ -145,8 +145,13 @@ export function initSellerLogin() {
   // Login submit
   loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('login-email').value;
+    let email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
+    
+    // Si el usuario ingresa 'admin', autocompletar con el correo del administrador
+    if (email.trim().toLowerCase() === 'admin') {
+      email = 'admin@kanku.com';
+    }
     
     showStatus(t('seller.login.signingIn'), 'info');
 

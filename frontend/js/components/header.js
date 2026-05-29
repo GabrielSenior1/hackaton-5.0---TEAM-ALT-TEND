@@ -508,58 +508,18 @@ export function initHeader(appRouter) {
     window.location.hash = hash;
   });
 
-  // checkout actions — multi-vendor: one pedido per seller
-  document.getElementById('cart-drawer-checkout')?.addEventListener('click', async () => {
+  // checkout actions — navigate to dedicated checkout page
+  document.getElementById('cart-drawer-checkout')?.addEventListener('click', () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
       showToast(t('header.cartCheckoutEmpty'), 'error');
       return;
     }
-
-    const user = getCurrentUser();
-    if (!user) {
-      showToast(t('header.loginRequired'), 'error');
-      return;
-    }
-
-    const groups = {};
-    cart.forEach(item => {
-      const uid = item.vendedorUid || 'unknown';
-      if (!groups[uid]) groups[uid] = { vendedorUid: uid, vendedorNombre: item.vendedorNombre || 'Vendedor', items: [] };
-      groups[uid].items.push({
-        nombre: item.name,
-        precio: item.price,
-        cantidad: item.quantity,
-        productId: item.id,
-        imagenUrl: item.image || '',
-      });
-    });
-
+    // Close cart drawer and navigate to checkout page
     closeCart();
-
-    try {
-      let successCount = 0;
-      for (const group of Object.values(groups)) {
-        const total = group.items.reduce((sum, i) => sum + (i.precio * i.cantidad), 0);
-        await createPedido({
-          vendedorUid: group.vendedorUid,
-          vendedorNombre: group.vendedorNombre,
-          compradorUid: user.uid,
-          compradorNombre: user.displayName || user.email || 'Anónimo',
-          compradorEmail: user.email || '',
-          items: group.items,
-          total,
-        });
-        successCount++;
-      }
-
-      localStorage.setItem('cart', '[]');
-      updateCartBadge();
-      showToast(`${successCount} ${t('header.cartCheckoutSuccess')}`, 'success');
-    } catch (e) {
-      console.error('Checkout error:', e);
-      showToast(t('header.cartCheckoutError'), 'error');
-    }
+    setTimeout(() => {
+      window.location.hash = '#checkout';
+    }, 320);
   });
 }
 

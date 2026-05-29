@@ -60,15 +60,25 @@ export function renderSellerOrders() {
 
 let allOrders = [];
 let orderFilter = 'all';
+let lastVisibleOrder = null;
+let hasMoreOrders = true;
 
 export async function initSellerOrders() {
   const user = getCurrentUser();
   if (!user) return;
 
+  allOrders = [];
+  lastVisibleOrder = null;
+  hasMoreOrders = true;
   await loadOrders(user.uid);
 
   // Refresh
-  document.getElementById('btn-refresh-orders')?.addEventListener('click', () => loadOrders(user.uid));
+  document.getElementById('btn-refresh-orders')?.addEventListener('click', () => {
+    allOrders = [];
+    lastVisibleOrder = null;
+    hasMoreOrders = true;
+    loadOrders(user.uid);
+  });
 
   // Filters
   document.querySelectorAll('.order-filter').forEach(btn => {
@@ -87,9 +97,30 @@ export async function initSellerOrders() {
   });
 }
 
-async function loadOrders(uid) {
+async function loadOrders(uid, loadMore = false) {
+  if (!hasMoreOrders && loadMore) return;
+  
   try {
-    allOrders = await getPedidosByVendedor(uid);
+    const btnLoadMore = document.getElementById('btn-load-more-orders');
+    if (btnLoadMore) {
+      btnLoadMore.disabled = true;
+      btnLoadMore.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
+    }
+
+    const { data, lastVisible } = await getPedidosByVendedor(uid, 10, lastVisibleOrder);
+    
+    if (data.length < 10) {
+      hasMoreOrders = false;
+    }
+    
+    lastVisibleOrder = lastVisible;
+
+    if (loadMore) {
+      allOrders = [...allOrders, ...data];
+    } else {
+      allOrders = data;
+    }
+    
     renderOrdersList();
   } catch (e) {
     console.error('Error loading orders:', e);
@@ -97,7 +128,7 @@ async function loadOrders(uid) {
     if (list) list.innerHTML = `
       <div style="text-align: center; padding: 40px;">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--error);">error</span>
-        <p class="body-md" style="color: var(--error); margin-top: 8px;">${t('seller.orders.error')}</p>
+        <p class="body-md" style="color: var(--error); margin-top: 8px;">${t('seller.orders.error') || 'Error al cargar'}</p>
       </div>
     `;
   }
@@ -128,9 +159,21 @@ function renderOrdersList() {
     const date = order.creadoEn?.toDate?.() || new Date();
     const dateStr = date.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
+    // Delivery info
+    const isEnvio = order.tipoEntrega === 'envio';
+    const entregaLabel = isEnvio ? '🚚 Envío a Domicilio' : '📍 Recogida en Origen';
+    const entregaColor = isEnvio ? 'var(--secondary)' : 'var(--tertiary)';
+    const direccion = order.direccionEntrega;
+
+    // Buyer profile
+    const esInvitado = order.esInvitado !== false;
+    const esInstitucional = order.tipoPerfil === 'institucional';
+    const instData = order.datosInstitucionales;
+
     return `
       <div class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 16px; animation: fadeInUp 0.4s ease;">
         
+        <!-- Header Row -->
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div style="display: flex; align-items: center; gap: 12px;">
             <span class="material-symbols-outlined filled" style="font-size: 24px; color: var(--${config.color});">${config.icon}</span>
@@ -139,7 +182,23 @@ function renderOrdersList() {
               <p style="font-size: 12px; color: var(--on-surface-variant);">${dateStr}</p>
             </div>
           </div>
-          <span class="status-badge ${config.badgeClass}">${config.label}</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <!-- Delivery badge -->
+            <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: ${isEnvio ? 'var(--primary-fixed)' : 'var(--secondary-container)'}; color: ${entregaColor}; border: 1px solid ${entregaColor}; display: flex; align-items: center; gap: 4px;">
+              ${entregaLabel}
+            </span>
+            <!-- Buyer type badge -->
+            ${esInstitucional ? `
+              <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--tertiary-container); color: var(--on-tertiary-container); display: flex; align-items: center; gap: 4px;">
+                🏛️ B2B
+              </span>
+            ` : esInvitado ? `
+              <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-container-highest); color: var(--on-surface-variant);">
+                👤 Invitado
+              </span>
+            ` : ''}
+            <span class="status-badge ${config.badgeClass}">${config.label}</span>
+          </div>
         </div>
 
         <!-- Order Items -->
@@ -152,10 +211,42 @@ function renderOrdersList() {
           `).join('')}
         </div>
 
+        <!-- Delivery Details -->
+        ${isEnvio && direccion ? `
+          <div style="padding: 12px 14px; background: var(--primary-fixed); border-radius: var(--radius-lg); border: 1px solid var(--secondary); font-size: 13px;">
+            <p style="font-size: 11px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; display: flex; align-items: center; gap: 4px;">
+              <span class="material-symbols-outlined" style="font-size: 14px;">location_on</span>
+              Dirección de Envío
+            </p>
+            <p style="margin: 2px 0; color: var(--on-surface); font-weight: 600;">${direccion.address || ''}, ${direccion.city || ''}</p>
+            ${direccion.phone ? `<p style="margin: 2px 0; color: var(--on-surface-variant);">📞 ${direccion.phone}</p>` : ''}
+            ${direccion.notes ? `<p style="margin: 4px 0 0; color: var(--on-surface-variant); font-style: italic;">📝 ${direccion.notes}</p>` : ''}
+          </div>
+        ` : !isEnvio ? `
+          <div style="padding: 10px 14px; background: var(--surface-container-low); border-radius: var(--radius-lg); font-size: 12px; color: var(--on-surface-variant); display: flex; align-items: center; gap: 8px;">
+            <span class="material-symbols-outlined" style="font-size: 16px; color: var(--tertiary);">store</span>
+            <span>El comprador recogerá en tu punto de venta / tienda.</span>
+          </div>
+        ` : ''}
+
+        <!-- Institutional Data -->
+        ${esInstitucional && instData ? `
+          <div style="padding: 12px 14px; background: var(--tertiary-container); border-radius: var(--radius-lg); font-size: 13px;">
+            <p style="font-size: 11px; font-weight: 700; color: var(--on-tertiary-container); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; display: flex; align-items: center; gap: 4px;">
+              <span class="material-symbols-outlined" style="font-size: 14px;">domain</span>
+              Datos Institucionales (B2B)
+            </p>
+            ${instData.nombreOrganizacion ? `<p style="margin: 2px 0; font-weight: 600; color: var(--on-tertiary-container);">🏛️ ${instData.nombreOrganizacion}</p>` : ''}
+            ${instData.nit ? `<p style="margin: 2px 0; color: var(--on-tertiary-container);">NIT: ${instData.nit}</p>` : ''}
+            ${instData.cargo ? `<p style="margin: 2px 0; color: var(--on-tertiary-container);">Cargo: ${instData.cargo}</p>` : ''}
+          </div>
+        ` : ''}
+
         <!-- Order Footer -->
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
             <p style="font-size: 12px; color: var(--on-surface-variant);">${t('seller.orders.buyer')}: <strong>${order.compradorNombre || order.compradorEmail || t('seller.orders.anonymous')}</strong></p>
+            ${order.compradorEmail ? `<p style="font-size: 11px; color: var(--on-surface-variant); margin-top: 2px;">📧 ${order.compradorEmail}</p>` : ''}
           </div>
           <div style="display: flex; align-items: center; gap: 16px;">
             <span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--secondary);">${formatPrice(order.total || 0)}</span>
@@ -178,6 +269,21 @@ function renderOrdersList() {
       </div>
     `;
   }).join('');
+
+  if (hasMoreOrders) {
+    list.innerHTML += `
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <button id="btn-load-more-orders" class="btn btn-secondary" style="padding: 10px 24px; border-radius: var(--radius-xl);">
+          Cargar más
+        </button>
+      </div>
+    `;
+    
+    document.getElementById('btn-load-more-orders')?.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (user) loadOrders(user.uid, true);
+    });
+  }
 
   // Attach action listeners
   list.querySelectorAll('.order-action-btn').forEach(btn => {

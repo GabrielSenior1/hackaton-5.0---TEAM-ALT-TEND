@@ -67,3 +67,5 @@ coverage.xml
 # Misc
 # ========================
 *.log
+node_modules/
+

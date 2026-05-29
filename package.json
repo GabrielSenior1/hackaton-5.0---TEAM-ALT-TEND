@@ -3,5 +3,27 @@
   "version": "1.0.0",
   "scripts": {
     "build": "cd frontend && npm install && npm run build && cd .. && mkdir -p public && cp -r frontend/dist/* public/"
+  },
+  "description": "> Plataforma de trazabilidad, turismo y comercio para el cacao del Magdalena, Sierra Nevada de Santa Marta.",
+  "main": "setup_companies.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielSenior1/hackaton-5.0---TEAM-ALT-TEND.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielSenior1/hackaton-5.0---TEAM-ALT-TEND/issues"
+  },
+  "homepage": "https://github.com/GabrielSenior1/hackaton-5.0---TEAM-ALT-TEND#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.29.7",
+    "babel-jest": "^30.4.1",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1"
   }
 }

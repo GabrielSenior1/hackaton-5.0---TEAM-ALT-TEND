@@ -19,6 +19,7 @@ import { renderSellerDashboard, initSellerDashboard } from './pages/seller-dashb
 import { renderSellerProducts, initSellerProducts } from './pages/seller-products.js';
 import { renderSellerOrders, initSellerOrders } from './pages/seller-orders.js';
 import { renderSellerBrand, initSellerBrand } from './pages/seller-brand.js';
+import { renderCheckout, initCheckout } from './pages/checkout.js';
 import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
 
 // ── Page Registry ────────────────────────────────────────
@@ -29,6 +30,7 @@ const consumerPages = {
   scanner:      { render: renderScanner,      init: initScanner,       title: () => t('nav.scanner') },
   dashboard:    { render: renderDashboard,    init: initDashboard,     title: () => t('nav.dashboard') },
   model3d:      { render: renderModel3D,      init: initModel3D,       title: '3D' },
+  checkout:     { render: renderCheckout,     init: initCheckout,      title: 'Finalizar Compra' },
 };
 
 const sellerPages = {
@@ -43,7 +45,15 @@ let currentPage = null;
 
 // ── Router ───────────────────────────────────────────────
 function getPageFromHash() {
-  const hash = window.location.hash.replace('#', '').replace('/', '') || 'product';
+  let hash = window.location.hash.replace('#', '').replace('/', '');
+  // If we are returning from Stripe, always route to checkout regardless of hash
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('session_id')) {
+    return 'checkout';
+  }
+  
+  if (!hash) hash = 'product';
+
   // Map seller routes
   if (hash.startsWith('seller')) {
     return sellerPages[hash] ? hash : 'seller-login';
@@ -208,6 +218,16 @@ async function init() {
 
   // Initialize Firebase
   await initFirebase().catch(e => console.warn('Firebase init skipped:', e.message));
+
+  // Esperar a que Firebase Auth recupere la sesión activa antes de navegar
+  await new Promise((resolve) => {
+    const unsubscribe = onAuthChange((user) => {
+      resolve(user);
+      if (typeof unsubscribe === 'function') unsubscribe();
+    });
+    // Tiempo de espera máximo de 1.5 segundos
+    setTimeout(resolve, 1500);
+  });
 
   // Listen for hash changes
   window.addEventListener('hashchange', () => {

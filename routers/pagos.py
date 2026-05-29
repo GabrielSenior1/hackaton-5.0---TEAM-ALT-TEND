@@ -17,9 +17,25 @@ from schemas.transaccion import (
 )
 from services.pago_service import (
     crear_checkout_session,
+    crear_checkout_cart,
     verificar_pago,
     calcular_comisiones,
 )
+from pydantic import BaseModel
+from typing import List, Optional
+
+class CartItem(BaseModel):
+    name: str
+    description: Optional[str] = ""
+    price: float
+    quantity: int
+
+class CheckoutCartCreate(BaseModel):
+    items: List[CartItem]
+    comprador_email: Optional[str] = None
+    success_url: str
+    cancel_url: str
+    metadata: Optional[dict] = None
 
 router = APIRouter()
 
@@ -85,6 +101,28 @@ def crear_sesion_pago(datos: CheckoutSessionCreate, db: Session = Depends(get_db
         checkout_url=session["checkout_url"],
         monto_usd=monto_total,
     )
+
+
+@router.post("/checkout-cart", response_model=CheckoutSessionResponse)
+def crear_sesion_carrito(datos: CheckoutCartCreate):
+    """
+    Crea una sesión de Stripe Checkout para compras desde el carrito.
+    """
+    try:
+        session = crear_checkout_cart(
+            items=[item.dict() for item in datos.items],
+            comprador_email=datos.comprador_email,
+            success_url=datos.success_url,
+            cancel_url=datos.cancel_url,
+            metadata=datos.metadata,
+        )
+        return CheckoutSessionResponse(
+            session_id=session["session_id"],
+            checkout_url=session["checkout_url"],
+            monto_usd=session["monto_usd"],
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/verificar/{session_id}")

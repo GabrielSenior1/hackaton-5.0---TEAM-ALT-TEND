@@ -31,6 +31,7 @@ from routers import (
     rutas_turisticas,
     pagos,
     verificacion,
+    notificaciones,
 )
 
 settings = get_settings()
@@ -50,18 +51,34 @@ app = FastAPI(
 )
 
 # ── CORS ─────────────────────────────────────────────────
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        settings.frontend_url,
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://localhost:5500",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+origins = []
+if settings.frontend_url == "*":
+    origins = ["*"]
+else:
+    origins = [url.strip() for url in settings.frontend_url.split(",") if url.strip()]
+    if settings.debug:
+        origins.extend([
+            "http://localhost:3000",
+            "http://localhost:5173",
+            "http://localhost:5500",
+        ])
+
+if "*" in origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # ── Archivos estáticos ──────────────────────────────────
 try:
@@ -83,6 +100,7 @@ app.include_router(qr.router, prefix="/api/v1/qr", tags=["📱 Códigos QR"])
 app.include_router(rutas_turisticas.router, prefix="/api/v1/rutas", tags=["🗺️ Rutas Turísticas"])
 app.include_router(pagos.router, prefix="/api/v1/pagos", tags=["💳 Pagos"])
 app.include_router(verificacion.router, prefix="/api/v1/verificar", tags=["🔒 Verificación"])
+app.include_router(notificaciones.router, prefix="/api/v1/notificaciones", tags=["📧 Notificaciones"])
 
 
 # ── Crear tablas al iniciar ──────────────────────────────
@@ -110,5 +128,6 @@ async def root():
             "rutas_turisticas": "/api/v1/rutas",
             "pagos": "/api/v1/pagos",
             "verificacion": "/api/v1/verificar",
+            "notificaciones": "/api/v1/notificaciones",
         },
     }

@@ -3,9 +3,10 @@
  * Shows all products from all sellers with category filtering
  */
 import { formatPrice } from '../api.js';
-import { getAllProductos, getReviewsForProducts } from '../firebase.js';
+import { getAllProductos, getReviewsForProducts, getVendedor } from '../firebase.js';
 import { updateCartBadge } from '../components/header.js';
 import { openProductModal } from '../components/product-modal.js';
+
 
 export function renderProduct() {
   return `
@@ -92,6 +93,22 @@ export function renderProduct() {
         </section>
 
       </main>
+
+      <!-- Seller Map Modal -->
+      <div id="seller-map-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+        <div class="card" style="width: 100%; max-width: 600px; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center; background: var(--surface-container);">
+            <h3 class="headline-md" id="map-modal-title" style="margin: 0; font-size: 18px;">Ubicación de la Empresa</h3>
+            <button id="close-map-modal" class="btn" style="padding: 8px; border-radius: 50%;">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div id="seller-map-container" style="height: 400px; width: 100%; background: var(--surface-container-high); position: relative; z-index: 1;">
+            <!-- Leaflet Map will be injected here -->
+          </div>
+        </div>
+      </div>
+
     </div>
   `;
 }
@@ -307,13 +324,23 @@ async function renderCatalog() {
         }
         <span class="catalog-card__badge">${catEmoji[product.categoria] || ''} ${(product.categoria || '').toUpperCase()}</span>
       </div>
-      <div class="catalog-card__body">
-        <h4 class="catalog-card__name">${product.nombre}</h4>
-        ${count > 0 ? `<div class="catalog-card__rating">${renderStars(avg)} <span>${avg.toFixed(1)}</span></div>` : ''}
-        <div class="catalog-card__footer">
-          <span class="catalog-card__price">${formatPrice(product.precio || 0)}</span>
-          <button class="btn btn-primary catalog-add-cart" data-product-id="${product.id}">
-            <span class="material-symbols-outlined" style="font-size: 14px;">add_shopping_cart</span>
+      <div style="padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1;">
+        <h4 style="font-weight: 700; font-size: 16px; color: var(--on-surface);">${product.nombre}</h4>
+        ${count > 0 ? `<div style="display: flex; align-items: center; gap: 6px;">${renderStars(avg)} <span style="font-size: 11px; color: var(--on-surface-variant);">${avg.toFixed(1)} (${count} ${count === 1 ? t('review.oneReview') : t('review.nReviews')})</span></div>` : ''}
+        <p style="font-size: 13px; color: var(--on-surface-variant); flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${product.descripcion || ''}</p>
+        ${product.vendedorNombre ? `
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <p style="font-size: 11px; color: var(--secondary); font-weight: 600; display: flex; align-items: center; gap: 4px;"><span class="material-symbols-outlined" style="font-size: 14px;">storefront</span> ${product.vendedorNombre}</p>
+            <button class="btn btn-secondary catalog-view-map" data-vendedor-uid="${product.vendedorUid}" data-vendedor-nombre="${product.vendedorNombre}" style="padding: 4px 8px; font-size: 10px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 2px;">
+              <span class="material-symbols-outlined" style="font-size: 14px;">location_on</span> Mapa
+            </button>
+          </div>
+        ` : ''}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--outline-variant);">
+          <span style="font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 700; color: var(--secondary);">${formatPrice(product.precio || 0)}</span>
+          <button class="btn btn-primary catalog-add-cart" data-product-id="${product.id}" style="padding: 8px 16px; font-size: 11px; border-radius: var(--radius-lg);">
+            <span class="material-symbols-outlined" style="font-size: 16px;">add_shopping_cart</span>
+            ${t('product.add')}
           </button>
         </div>
       </div>
@@ -358,6 +385,67 @@ async function renderCatalog() {
       const product = catalogProducts.find(p => p.id === pid);
       if (product) {
         openProductModal(product, catalogReviews);
+      }
+    });
+  });
+
+  // Map listeners
+  let currentMap = null;
+  const mapModal = document.getElementById('seller-map-modal');
+  const closeMapBtn = document.getElementById('close-map-modal');
+
+  closeMapBtn?.addEventListener('click', () => {
+    if (mapModal) mapModal.style.display = 'none';
+  });
+
+  grid.querySelectorAll('.catalog-view-map').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const uid = btn.dataset.vendedorUid;
+      const nombre = btn.dataset.vendedorNombre;
+      if (!uid) return;
+
+      document.getElementById('map-modal-title').textContent = `Ubicación: ${nombre}`;
+      mapModal.style.display = 'flex';
+
+      const mapContainer = document.getElementById('seller-map-container');
+      mapContainer.innerHTML = '<div class="spinner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>';
+
+      try {
+        const vendedor = await getVendedor(uid);
+        if (!vendedor || !vendedor.latitud || !vendedor.longitud) {
+          mapContainer.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:20px;color:var(--on-surface-variant);">
+            <span class="material-symbols-outlined" style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;">location_off</span>
+            <p>El vendedor aún no ha registrado su ubicación exacta.</p>
+          </div>`;
+          return;
+        }
+
+        mapContainer.innerHTML = '';
+        if (currentMap) {
+          currentMap.remove();
+        }
+
+        // Initialize Leaflet map
+        if (typeof L !== 'undefined') {
+          currentMap = L.map('seller-map-container').setView([vendedor.latitud, vendedor.longitud], 13);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(currentMap);
+          
+          L.marker([vendedor.latitud, vendedor.longitud]).addTo(currentMap)
+            .bindPopup(`<b>${nombre}</b><br>${vendedor.ubicacion || 'Ubicación verificada'}`)
+            .openPopup();
+            
+          // Invalidate size after a slight delay to ensure container is fully visible
+          setTimeout(() => currentMap.invalidateSize(), 100);
+        } else {
+          mapContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--error);">Error al cargar el mapa.</p>';
+        }
+
+      } catch (err) {
+        console.error('Error fetching seller location:', err);
+        mapContainer.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--error);">Ocurrió un error al cargar la ubicación.</p>';
       }
     });
   });

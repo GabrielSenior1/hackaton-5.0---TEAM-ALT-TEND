@@ -12,12 +12,17 @@ from models.lote import Lote
 from models.productor import Productor
 from schemas.lote import LoteCreate, LoteUpdate, LoteResponse
 from services.hash_service import generar_hash_lote
+from auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/", response_model=LoteResponse, status_code=status.HTTP_201_CREATED)
-def crear_lote(lote: LoteCreate, db: Session = Depends(get_db)):
+def crear_lote(
+    lote: LoteCreate, 
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
     """
     Registra un nuevo lote de cacao y genera su hash de trazabilidad SHA-256.
     Una vez generado, el hash no puede ser modificado.
@@ -96,6 +101,7 @@ def actualizar_lote(
     lote_id: int,
     datos: LoteUpdate,
     db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
 ):
     """
     Actualiza campos NO SENSIBLES del lote (estado, destino, notas).

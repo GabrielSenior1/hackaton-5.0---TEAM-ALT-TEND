@@ -16,12 +16,17 @@ from schemas.certificacion import (
     CertificacionResponse,
 )
 from services.hash_service import generar_hash_certificacion
+from auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/", response_model=CertificacionResponse, status_code=status.HTTP_201_CREATED)
-def crear_certificacion(cert: CertificacionCreate, db: Session = Depends(get_db)):
+def crear_certificacion(
+    cert: CertificacionCreate, 
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
     """Registra una nueva certificación con hash de integridad."""
     # Verificar productor
     productor = db.query(Productor).filter(Productor.id == cert.productor_id).first()
@@ -78,6 +83,7 @@ def actualizar_certificacion(
     cert_id: int,
     datos: CertificacionUpdate,
     db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
 ):
     """Actualiza campos administrativos de una certificación."""
     cert = db.query(Certificacion).filter(Certificacion.id == cert_id).first()

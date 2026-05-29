@@ -49,6 +49,10 @@ def crear_checkout_session(
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
+            billing_address_collection="required",
+            shipping_address_collection={
+                "allowed_countries": ["CO", "US", "ES", "GB"],
+            },
             line_items=[
                 {
                     "price_data": {
@@ -62,6 +66,62 @@ def crear_checkout_session(
                     "quantity": 1,
                 },
             ],
+            mode="payment",
+            success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=cancel_url,
+            metadata=metadata or {},
+        )
+
+        return {
+            "session_id": session.id,
+            "checkout_url": session.url,
+            "monto_usd": monto_usd,
+        }
+
+    except stripe.error.StripeError as e:
+        raise Exception(f"Error de Stripe: {str(e)}")
+
+
+def crear_checkout_cart(
+    items: list,
+    comprador_email: str,
+    success_url: str,
+    cancel_url: str,
+    metadata: Optional[dict] = None,
+) -> dict:
+    """
+    Crea una sesión de Stripe Checkout para un carrito de compras genérico.
+    Args:
+        items: Lista de diccionarios con 'name', 'description', 'price' (USD) y 'quantity'.
+        comprador_email: Email del comprador para prellenar Stripe.
+        success_url: URL de redirección tras pago exitoso.
+        cancel_url: URL de redirección tras cancelación.
+    """
+    try:
+        line_items = []
+        monto_usd = 0
+        for item in items:
+            line_items.append({
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {
+                        "name": item.get("name", "Producto Kanku"),
+                        "description": item.get("description", ""),
+                    },
+                    "unit_amount": int(float(item.get("price", 0)) * 100),
+                },
+                "quantity": int(item.get("quantity", 1)),
+            })
+            monto_usd += float(item.get("price", 0)) * int(item.get("quantity", 1))
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            billing_address_collection="required",
+            shipping_address_collection={
+                "allowed_countries": ["CO", "US", "ES", "GB"],
+            },
+            customer_email=comprador_email if comprador_email else None,
+            line_items=line_items,
             mode="payment",
             success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
             cancel_url=cancel_url,

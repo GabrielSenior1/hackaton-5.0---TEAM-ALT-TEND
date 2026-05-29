@@ -51,8 +51,16 @@ export function renderSellerBrand() {
           <!-- Location -->
           <div class="form-field">
             <label class="form-field__label" for="brand-location">${t('seller.brand.location')}</label>
-            <input type="text" id="brand-location" class="form-field__input" placeholder="${t('seller.brand.placeholderLocation')}"
-              style="border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-lg);" />
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="brand-location" class="form-field__input" placeholder="${t('seller.brand.placeholderLocation')}"
+                style="flex: 1; border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-lg);" />
+              <button type="button" id="btn-get-location" class="btn btn-secondary" style="padding: 0 16px; border-radius: var(--radius-lg);" title="Obtener ubicación GPS">
+                <span class="material-symbols-outlined">my_location</span>
+              </button>
+            </div>
+            <input type="hidden" id="brand-lat" />
+            <input type="hidden" id="brand-lng" />
+            <div id="location-status" style="font-size: 12px; color: var(--secondary); margin-top: 4px; display: none;">📍 Coordenadas capturadas</div>
           </div>
 
           <!-- Categories -->
@@ -100,6 +108,13 @@ export async function initSellerBrand() {
       document.getElementById('brand-name').value = vendedor.nombreMarca || '';
       document.getElementById('brand-desc').value = vendedor.descripcion || '';
       document.getElementById('brand-location').value = vendedor.ubicacion || '';
+      document.getElementById('brand-lat').value = vendedor.latitud || '';
+      document.getElementById('brand-lng').value = vendedor.longitud || '';
+      
+      if (vendedor.latitud && vendedor.longitud) {
+        const locStatus = document.getElementById('location-status');
+        if (locStatus) locStatus.style.display = 'block';
+      }
 
       // Set logo
       if (vendedor.logo) {
@@ -132,6 +147,43 @@ export async function initSellerBrand() {
     }
   });
 
+  // Get GPS location
+  document.getElementById('btn-get-location')?.addEventListener('click', () => {
+    const btn = document.getElementById('btn-get-location');
+    const locStatus = document.getElementById('location-status');
+    const latInput = document.getElementById('brand-lat');
+    const lngInput = document.getElementById('brand-lng');
+
+    if (!navigator.geolocation) {
+      window.__components?.showToast?.('Tu navegador no soporta geolocalización.', 'error');
+      return;
+    }
+
+    btn.innerHTML = '<span class="spinner" style="width: 16px; height: 16px;"></span>';
+    btn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        latInput.value = position.coords.latitude;
+        lngInput.value = position.coords.longitude;
+        if (locStatus) {
+          locStatus.textContent = `📍 Coordenadas capturadas: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
+          locStatus.style.display = 'block';
+        }
+        window.__components?.showToast?.('Ubicación capturada correctamente', 'success');
+        btn.innerHTML = '<span class="material-symbols-outlined">my_location</span>';
+        btn.disabled = false;
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+        window.__components?.showToast?.('No se pudo obtener la ubicación. Verifica los permisos.', 'error');
+        btn.innerHTML = '<span class="material-symbols-outlined">my_location</span>';
+        btn.disabled = false;
+      },
+      { enableHighAccuracy: true }
+    );
+  });
+
   // Save form
   document.getElementById('brand-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -146,6 +198,13 @@ export async function initSellerBrand() {
         ubicacion: document.getElementById('brand-location').value,
         categorias: Array.from(document.querySelectorAll('input[name="brand-cat"]:checked')).map(cb => cb.value),
       };
+
+      const lat = document.getElementById('brand-lat').value;
+      const lng = document.getElementById('brand-lng').value;
+      if (lat && lng) {
+        data.latitud = parseFloat(lat);
+        data.longitud = parseFloat(lng);
+      }
 
       // Upload logo if changed
       const logoFile = document.getElementById('brand-logo-input').files[0];

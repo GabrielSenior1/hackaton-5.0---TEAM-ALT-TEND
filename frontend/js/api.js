@@ -4,6 +4,7 @@
  */
 
 const API_BASE = 'http://localhost:8000/api/v1';
+export const STRIPE_PUBLIC_KEY = 'pk_test_51Tc5kDBY0rzF1W6Xh75F4rqL0Hqd78hrlpfwMDmUCj9QDBTWoewONn7qwRRLOnIot1vQRgKBx0GH06tY4KS5VzH300NqFn1Nqz';
 
 class ApiClient {
   constructor(baseUrl = API_BASE) {
@@ -12,11 +13,28 @@ class ApiClient {
 
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
+    
+    // Attempt to get Firebase Auth token if available
+    let token = null;
+    try {
+      if (window.__firebase && window.__firebase.auth && window.__firebase.auth.currentUser) {
+        token = await window.__firebase.auth.currentUser.getIdToken();
+      }
+    } catch (e) {
+      console.warn("Could not get Firebase token", e);
+    }
+
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       ...options,
     };
 
@@ -137,6 +155,13 @@ class ApiClient {
   // ── Pagos ───────────────────────────────────────
   async crearPago(data) {
     return this.request('/pagos/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async crearPagoCarrito(data) {
+    return this.request('/pagos/checkout-cart', {
       method: 'POST',
       body: JSON.stringify(data),
     });

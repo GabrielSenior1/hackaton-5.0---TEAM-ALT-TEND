@@ -10,12 +10,17 @@ from typing import List
 from database import get_db
 from models.productor import Productor
 from schemas.productor import ProductorCreate, ProductorUpdate, ProductorResponse
+from auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/", response_model=ProductorResponse, status_code=status.HTTP_201_CREATED)
-def crear_productor(productor: ProductorCreate, db: Session = Depends(get_db)):
+def crear_productor(
+    productor: ProductorCreate, 
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
     """Registra un nuevo productor de cacao."""
     # Verificar que la cédula no exista
     existente = db.query(Productor).filter(Productor.cedula == productor.cedula).first()
@@ -60,6 +65,7 @@ def actualizar_productor(
     productor_id: int,
     datos: ProductorUpdate,
     db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
 ):
     """Actualiza los datos de un productor."""
     productor = db.query(Productor).filter(Productor.id == productor_id).first()
@@ -76,7 +82,11 @@ def actualizar_productor(
 
 
 @router.delete("/{productor_id}", status_code=status.HTTP_204_NO_CONTENT)
-def eliminar_productor(productor_id: int, db: Session = Depends(get_db)):
+def eliminar_productor(
+    productor_id: int, 
+    db: Session = Depends(get_db),
+    user: dict = Depends(get_current_user)
+):
     """Desactiva un productor (soft delete)."""
     productor = db.query(Productor).filter(Productor.id == productor_id).first()
     if not productor:
