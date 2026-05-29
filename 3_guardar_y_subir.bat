@@ -70,6 +70,17 @@ git add .
 git commit -m "%MSG%"
 
 echo.
+echo Descargando cambios remotos para evitar conflictos...
+git pull --rebase origin %CURRENT_BRANCH%
+
+if errorlevel 1 (
+    echo [ERROR] No se pudieron descargar los cambios remotos.
+    echo Posiblemente hay conflictos. Resolvelos manualmente y reintenta.
+    pause
+    exit /b 1
+)
+
+echo.
 echo Subiendo cambios a GitHub (rama: %CURRENT_BRANCH%)...
 git push origin %CURRENT_BRANCH%
 
