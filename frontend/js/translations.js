@@ -1320,8 +1320,11 @@ const translations = {
   },
 };
 
-window.t = function (key) {
+function t(key) {
   const lang = localStorage.getItem('lang') || 'es';
   const dict = translations[lang] || translations.es;
   return dict[key] || translations.es[key] || key;
-};
+}
+
+window.t = t;
+export { translations, t };

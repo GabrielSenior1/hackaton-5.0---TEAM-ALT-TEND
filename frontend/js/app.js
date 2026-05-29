@@ -18,6 +18,8 @@ import { renderSellerProducts, initSellerProducts } from './pages/seller-product
 import { renderSellerOrders, initSellerOrders } from './pages/seller-orders.js';
 import { renderSellerBrand, initSellerBrand } from './pages/seller-brand.js';
 import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
+import { t } from './translations.js';
+window.t = t;
 
 // ── Page Registry ────────────────────────────────────────
 const consumerPages = {
