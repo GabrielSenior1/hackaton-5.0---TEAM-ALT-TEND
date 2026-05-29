@@ -105,6 +105,9 @@ body {
   line-height: 1.5;
   color: var(--on-background);
   background-color: var(--background);
+  background-image: 
+    /* Fractal noise SVG overlay representing micro-fine recycled paper fibers and texture */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paperNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paperNoise)' opacity='0.035'/%3E%3C/svg%3E");
   min-height: 100dvh;
   overflow-x: hidden;
 }
@@ -305,13 +308,15 @@ input, select, textarea { font-family: inherit; }
   left: 0;
   right: 0;
   z-index: 50;
-  background: var(--background);
-  border-bottom: 1px solid var(--outline-variant);
-  padding: 16px var(--container-margin-mobile);
+  background: rgba(255, 248, 245, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid rgba(115, 92, 0, 0.12);
+  padding: 18px var(--container-margin-mobile);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: box-shadow var(--transition-base);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: none; /* Hidden on mobile by default */
 }
 
@@ -322,7 +327,12 @@ input, select, textarea { font-family: inherit; }
 }
 
 .top-app-bar.scrolled {
-  box-shadow: var(--shadow-sm);
+  padding-block: 10px;
+  background: rgba(255, 248, 245, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 0.5px solid rgba(115, 92, 0, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
 
 .top-app-bar__brand {
@@ -330,10 +340,12 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: all 0.3s ease;
 }
 
-.top-app-bar__brand:hover { opacity: 0.8; }
+.top-app-bar__brand:hover {
+  transform: scale(1.02);
+}
 
 .top-app-bar__brand .material-symbols-outlined {
   color: var(--secondary);
@@ -344,7 +356,7 @@ input, select, textarea { font-family: inherit; }
   font-family: 'Playfair Display', serif;
   font-size: 28px;
   line-height: 34px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--secondary);
   letter-spacing: -0.01em;
 }
@@ -371,13 +383,17 @@ input, select, textarea { font-family: inherit; }
 }
 
 .top-app-bar__nav a {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--primary);
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
   position: relative;
+  font-weight: 600;
 }
 
-.top-app-bar__nav a:hover { opacity: 0.8; }
+.top-app-bar__nav a:hover {
+  color: var(--secondary);
+  transform: translateY(-1px);
+}
 
 .top-app-bar__nav a.active {
   color: var(--secondary);
@@ -387,11 +403,11 @@ input, select, textarea { font-family: inherit; }
 .top-app-bar__nav a.active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--secondary);
+  background: linear-gradient(90deg, #b8860b, #fed65b);
   border-radius: var(--radius-full);
 }
 
@@ -403,6 +419,38 @@ input, select, textarea { font-family: inherit; }
 
 @media (min-width: 768px) {
   .top-app-bar__menu-btn { display: none; }
+}
+
+/* ── Dropdown Selectors and Buttons Premium Glassmorphism ───── */
+#btn-lang-dropdown, #btn-curr-dropdown, #btn-acc-dropdown, #btn-cart-toggle {
+  background: rgba(255, 248, 245, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 0.5px solid rgba(115, 92, 0, 0.12) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#btn-lang-dropdown:hover, #btn-curr-dropdown:hover, #btn-acc-dropdown:hover, #btn-cart-toggle:hover {
+  background: rgba(255, 248, 245, 0.8) !important;
+  border-color: rgba(115, 92, 0, 0.3) !important;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(115, 92, 0, 0.05);
+}
+
+.header-dropdown-container > div {
+  background: rgba(255, 248, 245, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 0.5px solid rgba(115, 92, 0, 0.18) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* ── Shopping Cart Drawer Glassmorphism ─────────────────────── */
+#cart-drawer {
+  background: rgba(255, 248, 245, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-left: 0.5px solid rgba(115, 92, 0, 0.18) !important;
 }
 
 /* ── Bottom Navigation ────────────────────────────────────── */
