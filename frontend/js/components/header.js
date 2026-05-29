@@ -3,9 +3,8 @@
  */
 import { formatPrice } from '../api.js';
 
-export function renderHeader(activePage = 'home') {
+export function renderHeader(activePage = 'product') {
   const navItems = [
-    { id: 'home', label: t('nav.home'), icon: 'home' },
     { id: 'product', label: t('nav.product'), icon: 'storefront' },
     { id: 'traceability', label: t('nav.traceability'), icon: 'verified_user' },
     { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
@@ -202,7 +201,6 @@ export function renderHeader(activePage = 'home') {
  */
 export function renderBottomNav(activePage = 'home') {
   const items = [
-    { id: 'home', label: t('nav.home'), icon: 'home' },
     { id: 'product', label: t('nav.product'), icon: 'storefront' },
     { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
     { id: 'dashboard', label: t('nav.panel'), icon: 'dashboard' },
@@ -453,25 +451,18 @@ export function initHeader(appRouter) {
 }
 
 /**
- * 🛒 Render Shopping Cart Drawer items dynamically
+ * 🔴 Update cart badge count on header and bottom nav
  */
-export function renderCartDrawerItems() {
-  const container = document.getElementById('cart-drawer-items');
-  const totalEl = document.getElementById('cart-drawer-total');
+export function updateCartBadge() {
   const badge = document.getElementById('cart-badge-count');
   const badgeMobile = document.getElementById('cart-badge-count-mobile');
-  if (!container || !totalEl) return;
-
   let cart = [];
   try {
     cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (!Array.isArray(cart)) cart = [];
   } catch (e) {
     cart = [];
-    localStorage.setItem('cart', '[]');
   }
-  
-  // Update badge count
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   if (badge) {
     if (cartCount > 0) {
@@ -488,6 +479,26 @@ export function renderCartDrawerItems() {
     } else {
       badgeMobile.style.display = 'none';
     }
+  }
+}
+
+/**
+ * 🛒 Render Shopping Cart Drawer items dynamically
+ */
+export function renderCartDrawerItems() {
+  const container = document.getElementById('cart-drawer-items');
+  const totalEl = document.getElementById('cart-drawer-total');
+  if (!container || !totalEl) return;
+
+  updateCartBadge();
+
+  let cart = [];
+  try {
+    cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (!Array.isArray(cart)) cart = [];
+  } catch (e) {
+    cart = [];
+    localStorage.setItem('cart', '[]');
   }
 
   if (cart.length === 0) {

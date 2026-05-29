@@ -4,34 +4,40 @@
  */
 import { formatPrice } from '../api.js';
 import { getAllProductos, getVendedor } from '../firebase.js';
+import { updateCartBadge } from '../components/header.js';
 
 export function renderProduct() {
   return `
-    <div class="page-content">
-      <main class="container" style="padding-top: 40px; padding-bottom: 60px; display: flex; flex-direction: column; gap: 32px;">
-        
-        <!-- Header -->
-        <section style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center;">
-          <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">${t('product.marketplace')}</p>
-          <h1 class="headline-xl" style="color: var(--on-background);">${t('product.title')}</h1>
-          <p class="body-lg" style="color: var(--on-surface-variant); max-width: 520px;">
-            ${t('product.subtitle')}
-          </p>
-        </section>
+    <div class="page-content" style="position: relative;">
+      <!-- Ambient Background -->
+      <div class="ambient-blob ambient-blob--gold" style="top: 20%; left: -5%; width: 300px; height: 300px;"></div>
+      <div class="ambient-blob ambient-blob--green" style="bottom: 15%; right: -5%; width: 350px; height: 350px;"></div>
 
-        <!-- Category Filter -->
-        <section style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button class="catalog-filter active" data-filter="all" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--secondary-container); color: var(--on-secondary-container); transition: all 0.2s ease;">
-            🌿 ${t('product.filter.all')}
-          </button>
-          <button class="catalog-filter" data-filter="cacao" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            🍫 ${t('product.filter.cacao')}
-          </button>
-          <button class="catalog-filter" data-filter="cafe" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            ☕ ${t('product.filter.coffee')}
-          </button>
-          <button class="catalog-filter" data-filter="banano" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            🍌 ${t('product.filter.banana')}
+      <!-- Compact Hero Banner -->
+      <section class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding-top: 24px; padding-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 28px;">🌿</span>
+          <h1 class="headline-lg gold-gradient-text" style="margin: 0;">KANKU</h1>
+        </div>
+        <p class="body-md" style="color: var(--on-surface-variant); max-width: 480px; font-size: 14px;">
+          Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.
+        </p>
+        <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">${t('home.hero.honor')}</p>
+      </section>
+
+      <main class="container" style="padding-bottom: 60px; display: flex; flex-direction: column; gap: 32px;">
+
+        <!-- Amazon-style Search Bar -->
+        <section style="display: flex; max-width: 720px; margin: 0 auto; width: 100%; box-shadow: var(--shadow-sm); border-radius: var(--radius-xl); overflow: hidden;">
+          <select id="search-category" style="font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 0 14px; border: 1.5px solid var(--outline-variant); border-right: none; border-radius: 0; background: var(--surface-container-highest); color: var(--on-surface); cursor: pointer; outline: none; min-width: 130px; appearance: auto;">
+            <option value="all">🌿 Todos los productos</option>
+            <option value="cacao">🍫 Cacao</option>
+            <option value="cafe">☕ Café</option>
+            <option value="banano">🍌 Banano</option>
+          </select>
+          <input type="text" id="search-input" placeholder="Buscar productos…" style="font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; border: 1.5px solid var(--outline-variant); border-left: none; border-right: none; outline: none; flex: 1; background: var(--surface-container-low); color: var(--on-surface);">
+          <button id="search-btn" style="font-family: 'Inter', sans-serif; background: var(--secondary); color: var(--on-secondary); border: 1.5px solid var(--secondary); padding: 0 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;">
+            <span class="material-symbols-outlined" style="font-size: 22px;">search</span>
           </button>
         </section>
 
@@ -43,13 +49,53 @@ export function renderProduct() {
           </div>
         </section>
 
+        <!-- CTA Buttons -->
+        <section style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; padding-top: 16px;">
+          <button class="btn btn-primary" style="padding: 18px 36px; border-radius: 9999px;" data-nav="scanner">
+            <span class="material-symbols-outlined filled">qr_code_scanner</span>
+            <span>${t('home.cta.scan')}</span>
+          </button>
+          <button class="btn btn-secondary" style="padding: 18px 36px; border-radius: 9999px;" data-nav="seller-login">
+            <span class="material-symbols-outlined">storefront</span>
+            <span>${t('home.cta.seller')}</span>
+          </button>
+        </section>
+
+        <!-- Features -->
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding-bottom: 40px;">
+          <div class="card animate-fade-in-up stagger-1" style="text-align: center; opacity: 0; cursor: pointer;" data-nav="traceability">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--tertiary-container); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+              <span class="material-symbols-outlined filled" style="color: var(--on-tertiary-container); font-size: 28px;">verified_user</span>
+            </div>
+            <h3 class="headline-md" style="margin-bottom: 8px;">${t('home.feature.traceability')}</h3>
+            <p class="body-md" style="color: var(--on-surface-variant);">${t('home.feature.traceabilityDesc')}</p>
+          </div>
+
+          <div class="card animate-fade-in-up stagger-2" style="text-align: center; opacity: 0; cursor: pointer;" data-nav="story">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--secondary-container); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+              <span class="material-symbols-outlined filled" style="color: var(--on-secondary-container); font-size: 28px;">groups</span>
+            </div>
+            <h3 class="headline-md" style="margin-bottom: 8px;">${t('home.feature.community')}</h3>
+            <p class="body-md" style="color: var(--on-surface-variant);">${t('home.feature.communityDesc')}</p>
+          </div>
+
+          <div class="card animate-fade-in-up stagger-3" style="text-align: center; opacity: 0; cursor: pointer;" data-nav="model3d">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--primary-fixed); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+              <span class="material-symbols-outlined filled" style="color: var(--on-primary-fixed-variant); font-size: 28px;">view_in_ar</span>
+            </div>
+            <h3 class="headline-md" style="margin-bottom: 8px;">${t('home.feature.model3d')}</h3>
+            <p class="body-md" style="color: var(--on-surface-variant);">${t('home.feature.model3dDesc')}</p>
+          </div>
+        </section>
+
       </main>
     </div>
   `;
 }
 
 let catalogProducts = [];
-let catalogFilter = 'all';
+let catalogCategory = 'all';
+let catalogSearchText = '';
 let vendedorCache = {};
 
 export async function initProduct() {
@@ -68,30 +114,42 @@ export async function initProduct() {
 
   renderCatalog();
 
-  // Category filters
-  document.querySelectorAll('.catalog-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.catalog-filter').forEach(b => {
-        b.style.background = 'var(--surface-container)';
-        b.style.color = 'var(--on-surface)';
-        b.classList.remove('active');
-      });
-      btn.style.background = 'var(--secondary-container)';
-      btn.style.color = 'var(--on-secondary-container)';
-      btn.classList.add('active');
-      catalogFilter = btn.dataset.filter;
-      renderCatalog();
-    });
+  // Search bar logic
+  const searchSelect = document.getElementById('search-category');
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+
+  function doSearch() {
+    catalogCategory = searchSelect.value;
+    catalogSearchText = searchInput.value.trim().toLowerCase();
+    renderCatalog();
+  }
+
+  // Update placeholder when category changes
+  searchSelect.addEventListener('change', () => {
+    const labels = { all: 'Buscar productos…', cacao: 'Buscar en Cacao…', cafe: 'Buscar en Café…', banano: 'Buscar en Banano…' };
+    searchInput.placeholder = labels[searchSelect.value] || 'Buscar productos…';
+    doSearch();
   });
+
+  searchBtn.addEventListener('click', doSearch);
+  searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSearch(); });
 }
 
 async function renderCatalog() {
   const grid = document.getElementById('catalog-grid');
   if (!grid) return;
 
-  const filtered = catalogFilter === 'all'
+  let filtered = catalogCategory === 'all'
     ? catalogProducts
-    : catalogProducts.filter(p => p.categoria === catalogFilter);
+    : catalogProducts.filter(p => p.categoria === catalogCategory);
+
+  if (catalogSearchText) {
+    filtered = filtered.filter(p =>
+      (p.nombre || '').toLowerCase().includes(catalogSearchText) ||
+      (p.descripcion || '').toLowerCase().includes(catalogSearchText)
+    );
+  }
 
   if (filtered.length === 0) {
     grid.innerHTML = `
@@ -156,12 +214,8 @@ async function renderCatalog() {
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartBadge();
       window.__components?.showToast?.(t('product.added'), 'success');
-
-      // Update cart drawer
-      import('../components/header.js').then(module => {
-        module.renderCartDrawerItems();
-      });
     });
   });
 }

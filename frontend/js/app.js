@@ -8,7 +8,6 @@ window.t = t;
 
 import { renderHeader, renderBottomNav, showToast, initHeader } from './components/header.js';
 import { renderSellerHeader, initSellerHeader } from './components/seller-header.js';
-import { renderHome } from './pages/home.js';
 import { renderProduct, initProduct } from './pages/product.js';
 import { renderTraceability, initTraceability } from './pages/traceability.js';
 import { renderStory, initStory } from './pages/story.js';
@@ -24,7 +23,6 @@ import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
 
 // ── Page Registry ────────────────────────────────────────
 const consumerPages = {
-  home:         { render: renderHome,         init: null,              title: () => t('nav.home') },
   product:      { render: renderProduct,      init: initProduct,       title: () => t('nav.product') },
   traceability: { render: renderTraceability, init: initTraceability,  title: () => t('nav.traceability') },
   story:        { render: renderStory,        init: initStory,         title: 'Story' },
@@ -45,12 +43,12 @@ let currentPage = null;
 
 // ── Router ───────────────────────────────────────────────
 function getPageFromHash() {
-  const hash = window.location.hash.replace('#', '').replace('/', '') || 'home';
+  const hash = window.location.hash.replace('#', '').replace('/', '') || 'product';
   // Map seller routes
   if (hash.startsWith('seller')) {
     return sellerPages[hash] ? hash : 'seller-login';
   }
-  return consumerPages[hash] ? hash : 'home';
+  return consumerPages[hash] ? hash : 'product';
 }
 
 function isSellerPage(pageId) {
@@ -59,7 +57,7 @@ function isSellerPage(pageId) {
 
 function navigate(pageId) {
   const allPages = { ...consumerPages, ...sellerPages };
-  if (!allPages[pageId]) pageId = 'home';
+  if (!allPages[pageId]) pageId = 'product';
 
   // Cleanup previous page
   if (currentPage === 'scanner') {
@@ -114,6 +112,27 @@ function renderPage(pageId) {
       <div id="page-container">
         ${page.render()}
       </div>
+      <footer style="background: var(--surface-container-high); border-top: 1px solid var(--outline-variant); padding: 40px 24px 24px; margin-top: 48px;">
+        <div style="max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                <span style="font-size: 20px;">🌿</span>
+                <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; color: var(--secondary);">KANKU</span>
+              </div>
+              <p style="font-size: 13px; color: var(--on-surface-variant); max-width: 260px; line-height: 1.5;">Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.</p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--secondary);">${t('header.accessibility')}</span>
+              <a data-nav="traceability" style="font-size: 13px; color: var(--on-surface-variant); cursor: pointer;">${t('nav.traceability')}</a>
+              <a data-nav="story" style="font-size: 13px; color: var(--on-surface-variant); cursor: pointer;">Story</a>
+            </div>
+          </div>
+          <div style="border-top: 1px solid var(--outline-variant); padding-top: 16px; text-align: center;">
+            <p style="font-size: 12px; color: var(--outline);">&copy; ${new Date().getFullYear()} KANKU. Sierra Nevada de Santa Marta, Colombia.</p>
+          </div>
+        </div>
+      </footer>
       ${renderBottomNav(pageId)}
     `;
 
