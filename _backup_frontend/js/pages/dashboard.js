@@ -15,7 +15,7 @@ export function renderDashboard() {
         <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
             <h2 class="headline-lg" style="color: var(--on-background);">Dashboard</h2>
-            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">Panel de control — KANKU</p>
+            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">Panel de control — Cacao de la Sierra</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button class="btn btn-secondary" style="padding: 10px 18px; font-size: 11px; border-radius: var(--radius-xl);" id="btn-refresh-dashboard">

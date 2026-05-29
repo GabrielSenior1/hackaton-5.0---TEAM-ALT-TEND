@@ -1,7 +1,7 @@
 """
-🌿 Cacao de la Sierra — API Principal
+🌿 KANKU — API Principal
 =====================================
-Plataforma de trazabilidad, turismo y comercio para el cacao
+Plataforma de trazabilidad, turismo y comercio para el Cacao, Café y Banano
 del Magdalena, Sierra Nevada de Santa Marta.
 
 Ejecutar con:
@@ -39,7 +39,7 @@ settings = get_settings()
 app = FastAPI(
     title=settings.app_name,
     description=(
-        "API para la trazabilidad del cacao de la Sierra Nevada del Magdalena. "
+        "API para la trazabilidad de Cacao, Café y Banano de la Sierra Nevada del Magdalena. "
         "Conecta productores, turistas, hoteles y compradores internacionales "
         "en una cadena de valor unificada con certificaciones Fairtrade y "
         "Rainforest Alliance verificables mediante hashes SHA-256."
@@ -64,9 +64,16 @@ app.add_middleware(
 )
 
 # ── Archivos estáticos ──────────────────────────────────
-os.makedirs("static/qr_codes", exist_ok=True)
-os.makedirs("static/geo_data", exist_ok=True)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+try:
+    os.makedirs("static/qr_codes", exist_ok=True)
+    os.makedirs("static/geo_data", exist_ok=True)
+except OSError:
+    print("Aviso: No se pudieron crear los directorios estáticos (modo solo lectura)")
+
+try:
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+except RuntimeError:
+    print("Aviso: No se pudo montar el directorio estático")
 
 # ── Registrar routers ───────────────────────────────────
 app.include_router(productores.router, prefix="/api/v1/productores", tags=["🌱 Productores"])

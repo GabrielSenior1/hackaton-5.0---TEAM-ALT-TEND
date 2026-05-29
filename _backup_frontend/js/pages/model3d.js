@@ -13,7 +13,7 @@ export function renderModel3D() {
           <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">EXPERIENCIA INMERSIVA</p>
           <h2 class="headline-xl gold-gradient-text">Explora en 3D</h2>
           <p class="body-md" style="color: var(--on-surface-variant);">
-            Interactúa con nuestro producto. Rota, acerca y descubre cada detalle del empaque artesanal de KANKU.
+            Interactúa con nuestro producto. Rota, acerca y descubre cada detalle del empaque artesanal de Cacao de la Sierra.
           </p>
         </section>
 
@@ -23,7 +23,7 @@ export function renderModel3D() {
             <model-viewer
               id="product-model"
               src=""
-              alt="KANKU - Producto 3D"
+              alt="Cacao de la Sierra - Producto 3D"
               auto-rotate
               camera-controls
               touch-action="pan-y"
