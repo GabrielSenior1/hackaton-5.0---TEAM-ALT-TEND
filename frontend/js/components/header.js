@@ -5,11 +5,11 @@ import { formatPrice } from '../api.js';
 
 export function renderHeader(activePage = 'home') {
   const navItems = [
-    { id: 'home', label: 'Inicio', icon: 'home' },
-    { id: 'product', label: 'Tienda', icon: 'storefront' },
-    { id: 'traceability', label: 'Transparencia', icon: 'verified_user' },
-    { id: 'scanner', label: 'Escanear', icon: 'qr_code_scanner' },
-    { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+    { id: 'home', label: t('nav.home'), icon: 'home' },
+    { id: 'product', label: t('nav.product'), icon: 'storefront' },
+    { id: 'traceability', label: t('nav.traceability'), icon: 'verified_user' },
+    { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
+    { id: 'dashboard', label: t('nav.dashboard'), icon: 'dashboard' },
   ];
 
   // Retrieve current cart count safely
@@ -46,7 +46,7 @@ export function renderHeader(activePage = 'home') {
         `).join('')}
         <a data-nav="seller-login" style="cursor: pointer; font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: var(--radius-full); background: var(--tertiary); color: var(--on-tertiary); display: flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
           <span class="material-symbols-outlined" style="font-size: 16px;">storefront</span>
-          Vender
+          ${t('nav.seller')}
         </a>
       </nav>
 
@@ -67,16 +67,16 @@ export function renderHeader(activePage = 'home') {
             display: none; flex-direction: column; gap: 4px; z-index: 1000;
           ">
             <button class="lang-opt" data-lang="es" style="text-align: left; font-size: 13px; font-weight: 600; width: 100%; padding: 8px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 8px; cursor: pointer;">
-              <span>🇪🇸</span> Español
+              <span>🇪🇸</span> ${t('header.lang.es')}
             </button>
             <button class="lang-opt" data-lang="en" style="text-align: left; font-size: 13px; font-weight: 600; width: 100%; padding: 8px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 8px; cursor: pointer;">
-              <span>🇺🇸</span> English
+              <span>🇺🇸</span> ${t('header.lang.en')}
             </button>
             <button class="lang-opt" data-lang="fr" style="text-align: left; font-size: 13px; font-weight: 600; width: 100%; padding: 8px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 8px; cursor: pointer;">
-              <span>🇫🇷</span> Français
+              <span>🇫🇷</span> ${t('header.lang.fr')}
             </button>
             <button class="lang-opt" data-lang="pt" style="text-align: left; font-size: 13px; font-weight: 600; width: 100%; padding: 8px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 8px; cursor: pointer;">
-              <span>🇵🇹</span> Português
+              <span>🇵🇹</span> ${t('header.lang.pt')}
             </button>
           </div>
         </div>
@@ -110,15 +110,15 @@ export function renderHeader(activePage = 'home') {
             border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 16px;
             display: none; flex-direction: column; gap: 12px; z-index: 1000;
           ">
-            <p style="font-size: 11px; font-weight: 700; color: var(--secondary); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px;">Accesibilidad Visual</p>
+            <p style="font-size: 11px; font-weight: 700; color: var(--secondary); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 4px;">${t('header.accessibility')}</p>
             
             <button id="acc-high-contrast" style="text-align: left; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px; border-radius: var(--radius-lg); background: var(--surface-container-low); cursor: pointer;">
-              <span>Alto Contraste</span>
+              <span>${t('header.highContrast')}</span>
               <span id="contrast-status" class="material-symbols-outlined" style="font-size: 20px; color: var(--outline);">toggle_off</span>
             </button>
 
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: var(--surface-container-low); padding: 8px; border-radius: var(--radius-lg);">
-              <span style="font-size: 13px; font-weight: 600;">Tamaño de Letra</span>
+              <span style="font-size: 13px; font-weight: 600;">${t('header.fontSize')}</span>
               <div style="display: flex; gap: 8px;">
                 <button id="acc-font-minus" style="width: 30px; height: 30px; border-radius: 50%; background: var(--surface-container-highest); font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer;">A-</button>
                 <button id="acc-font-plus" style="width: 30px; height: 30px; border-radius: 50%; background: var(--surface-container-highest); font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer;">A+</button>
@@ -126,14 +126,14 @@ export function renderHeader(activePage = 'home') {
             </div>
 
             <button id="acc-voice" style="text-align: left; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 10px; border-radius: var(--radius-lg); background: var(--surface-container-low); cursor: pointer;">
-              <span>Audio-Guía (Voz)</span>
+              <span>${t('header.voiceGuide')}</span>
               <span id="voice-status" class="material-symbols-outlined" style="font-size: 20px; color: var(--outline);">toggle_off</span>
             </button>
           </div>
         </div>
 
         <!-- Cart Icon Button -->
-        <button id="btn-cart-toggle" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface-container-highest); border: 0.5px solid var(--outline-variant); cursor: pointer;" title="Ver Carrito">
+        <button id="btn-cart-toggle" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface-container-highest); border: 0.5px solid var(--outline-variant); cursor: pointer;" title="${t('header.viewCart')}">
           <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 20px;">shopping_cart</span>
           ${cartCount > 0 ? `
             <span id="cart-badge-count" style="
@@ -164,7 +164,7 @@ export function renderHeader(activePage = 'home') {
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 18px; margin-bottom: 18px;">
         <h3 class="headline-md" style="margin: 0; display: flex; align-items: center; gap: 8px; color: var(--secondary);">
           <span class="material-symbols-outlined" style="font-size: 26px;">shopping_cart</span>
-          Carrito
+          ${t('header.cartTitle')}
         </h3>
         <button id="cart-close-btn" style="cursor: pointer; color: var(--on-surface-variant); background: none; border: none; display: flex; align-items: center;">
           <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
@@ -179,11 +179,11 @@ export function renderHeader(activePage = 'home') {
       <!-- Cart footer summary -->
       <div style="border-top: 1px solid var(--outline-variant); padding-top: 20px; margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
         <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; color: var(--on-surface);">
-          <span>Total a pagar</span>
+          <span>${t('header.cartTotal')}</span>
           <span id="cart-drawer-total" style="color: var(--secondary); font-size: 20px;">$0.00</span>
         </div>
         <button id="cart-drawer-checkout" class="btn btn-primary btn-full" style="padding: 16px; border-radius: var(--radius-xl); font-weight: 700;">
-          PROCEDER AL PAGO
+          ${t('header.cartCheckout')}
         </button>
       </div>
     </div>
@@ -202,10 +202,10 @@ export function renderHeader(activePage = 'home') {
  */
 export function renderBottomNav(activePage = 'home') {
   const items = [
-    { id: 'home', label: 'Inicio', icon: 'home' },
-    { id: 'product', label: 'Tienda', icon: 'storefront' },
-    { id: 'scanner', label: 'Escanear', icon: 'qr_code_scanner' },
-    { id: 'dashboard', label: 'Panel', icon: 'dashboard' },
+    { id: 'home', label: t('nav.home'), icon: 'home' },
+    { id: 'product', label: t('nav.product'), icon: 'storefront' },
+    { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
+    { id: 'dashboard', label: t('nav.panel'), icon: 'dashboard' },
   ];
 
   return `
@@ -219,7 +219,7 @@ export function renderBottomNav(activePage = 'home') {
       <!-- Mobile Cart Toggle -->
       <a class="bottom-nav__item" id="btn-cart-toggle-mobile" style="position: relative;">
         <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="label-sm" style="font-size: 10px;">Carrito</span>
+        <span class="label-sm" style="font-size: 10px;">${t('nav.cart')}</span>
         <span id="cart-badge-count-mobile" style="
           position: absolute; top: 0px; right: 4px;
           background: var(--tertiary); color: var(--on-tertiary);
@@ -329,7 +329,7 @@ export function initHeader(appRouter) {
       localStorage.setItem('lang', selectedLang);
       
       // Trigger complete routing re-render for translation change
-      showToast('Idioma cambiado con éxito', 'success');
+      showToast(t('header.langChanged'), 'success');
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -342,7 +342,7 @@ export function initHeader(appRouter) {
       const selectedCurrency = btn.dataset.curr;
       localStorage.setItem('currency', selectedCurrency);
 
-      showToast(`Divisa cambiada a ${selectedCurrency}`, 'success');
+      showToast(`${t('header.currencyChanged')} ${selectedCurrency}`, 'success');
       setTimeout(() => {
         // Trigger a simple routing page refresh to update prices dynamically
         const hash = window.location.hash || '#/';
@@ -362,7 +362,7 @@ export function initHeader(appRouter) {
       status.textContent = active ? 'toggle_on' : 'toggle_off';
       status.style.color = active ? 'var(--tertiary)' : 'var(--outline)';
     }
-    showToast(active ? 'Contraste Alto Activado' : 'Contraste Normal Activado', 'success');
+    showToast(active ? t('header.contrastOn') : t('header.contrastOff'), 'success');
   });
 
   // Font sizing listeners
@@ -391,7 +391,7 @@ export function initHeader(appRouter) {
       voiceStatus.textContent = voiceSynthesizerEnabled ? 'toggle_on' : 'toggle_off';
       voiceStatus.style.color = voiceSynthesizerEnabled ? 'var(--tertiary)' : 'var(--outline)';
     }
-    showToast(voiceSynthesizerEnabled ? 'Lector de Voz Activado — Pasa el mouse sobre el texto' : 'Lector de Voz Desactivado', 'success');
+    showToast(voiceSynthesizerEnabled ? t('header.voiceOn') : t('header.voiceOff'), 'success');
   });
 
   // Screen reader synthesizer hover tracking
@@ -440,13 +440,12 @@ export function initHeader(appRouter) {
   document.getElementById('cart-drawer-checkout')?.addEventListener('click', () => {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
-      showToast('Tu carrito está vacío', 'error');
+      showToast(t('header.cartCheckoutEmpty'), 'error');
       return;
     }
     closeCart();
     
-    // Redirect to checkout checkout flow or payments
-    showToast('¡Redirigiendo a pasarela de pagos Stripe!', 'success');
+    showToast(t('header.cartRedirect'), 'success');
     setTimeout(() => {
       window.location.hash = '#/product'; // Redirect to store checkout view
     }, 1000);
@@ -495,7 +494,7 @@ export function renderCartDrawerItems() {
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; opacity: 0.7; padding-top: 40px;">
         <span class="material-symbols-outlined" style="font-size: 56px; color: var(--outline);">shopping_bag</span>
-        <p class="body-md" style="font-weight: 500;">Tu carrito está vacío</p>
+        <p class="body-md" style="font-weight: 500;">${t('header.cartEmpty')}</p>
       </div>
     `;
     totalEl.textContent = formatPrice(0);
@@ -511,7 +510,7 @@ export function renderCartDrawerItems() {
         <img src="${item.image}" style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-lg);" />
         <div style="flex: 1; min-width: 0;">
           <p style="font-weight: 700; font-size: 13px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</p>
-          <p style="font-size: 12px; font-weight: 600; color: var(--secondary); margin-top: 2px;">${formatPrice(item.price)} c/u</p>
+          <p style="font-size: 12px; font-weight: 600; color: var(--secondary); margin-top: 2px;">${formatPrice(item.price)} ${t('header.perUnit')}</p>
         </div>
         
         <!-- Qty controls -->
@@ -521,7 +520,7 @@ export function renderCartDrawerItems() {
           <button class="cart-qty-btn-plus" data-idx="${index}" style="width: 24px; height: 24px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer;">+</button>
         </div>
 
-        <button class="cart-delete-btn" data-idx="${index}" style="color: var(--error); padding: 4px; cursor: pointer; display: flex; align-items: center; background: none; border: none;" title="Eliminar">
+        <button class="cart-delete-btn" data-idx="${index}" style="color: var(--error); padding: 4px; cursor: pointer; display: flex; align-items: center; background: none; border: none;" title="${t('header.cartDelete')}">
           <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
         </button>
       </div>
@@ -558,7 +557,7 @@ export function renderCartDrawerItems() {
       cart.splice(idx, 1);
       localStorage.setItem('cart', JSON.stringify(cart));
       renderCartDrawerItems();
-      showToast('Producto eliminado del carrito', 'success');
+      showToast(t('header.cartDeleted'), 'success');
     });
   });
 }

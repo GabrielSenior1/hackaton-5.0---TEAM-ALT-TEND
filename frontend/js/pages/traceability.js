@@ -12,11 +12,11 @@ export function renderTraceability() {
         
         <!-- Header Section -->
         <section style="text-align: center; display: flex; flex-direction: column; gap: 16px;">
-          <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">TRAZABILIDAD TÉCNICA</p>
-          <h2 class="headline-xl" style="color: var(--on-background);">Verificación en Tiempo Real</h2>
+          <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">${t('trace.title')}</p>
+          <h2 class="headline-xl" style="color: var(--on-background);">${t('trace.subtitle')}</h2>
           <div style="display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--primary); margin-top: 8px;">
             <span class="material-symbols-outlined" style="font-size: 16px;">schedule</span>
-            <span class="body-md" style="font-size: 14px;">Última actualización: ${new Date().toLocaleDateString('es-CO', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</span>
+            <span class="body-md" style="font-size: 14px;">${t('trace.lastUpdate')}: ${new Date().toLocaleDateString(localStorage.getItem('lang') === 'en' ? 'en-US' : localStorage.getItem('lang') === 'fr' ? 'fr-FR' : localStorage.getItem('lang') === 'pt' ? 'pt-BR' : 'es-CO', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</span>
           </div>
           <div style="width: 96px; height: 1px; background: var(--secondary); margin: 32px auto 0; opacity: 0.5; position: relative;">
             <span class="material-symbols-outlined" style="font-size: 10px; color: var(--secondary); background: var(--background); padding: 0 4px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">eco</span>
@@ -41,14 +41,14 @@ export function renderTraceability() {
                   </div>
                   
                   <div style="text-align: center; display: flex; flex-direction: column; gap: 12px;">
-                    <h3 class="headline-md" style="color: var(--on-surface);">Estado Actual del Cultivo</h3>
-                    <p class="body-lg" style="color: var(--tertiary); font-weight: 600;">Condiciones Óptimas de Cosecha</p>
+                    <h3 class="headline-md" style="color: var(--on-surface);">${t('trace.statusTitle')}</h3>
+                    <p class="body-lg" style="color: var(--tertiary); font-weight: 600;">${t('trace.statusOptimal')}</p>
                     <p class="body-md" style="color: var(--on-surface-variant); max-width: 480px; margin: 0 auto;">
-                      Nuestros sensores indican niveles perfectos de humedad (<span id="sensor-humidity">72</span>%) y temperatura (<span id="sensor-temp">24</span>°C) en la parcela 'El Mirador'. El grano ha alcanzado su punto ideal de maduración.
+                      ${t('trace.sensorText')} (<span id="sensor-humidity">72</span>%) y temperatura (<span id="sensor-temp">24</span>°C) en la parcela 'El Mirador'. El grano ha alcanzado su punto ideal de maduración.
                     </p>
                     <div style="display: inline-flex; margin: 16px auto 0; padding: 10px 18px; background: var(--surface-container-highest); border-radius: 9999px; border: 1px solid var(--outline-variant); font-size: 13px; font-weight: 500; color: var(--on-surface); align-items: center; gap: 8px;">
                       <span class="material-symbols-outlined" style="font-size: 18px;">verified</span>
-                      Verificado por sistema de red local
+                      ${t('trace.verifiedBy')}
                     </div>
                   </div>
                 </div>
@@ -61,19 +61,19 @@ export function renderTraceability() {
             
             <div class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; flex: 1; border: 1px solid transparent; transition: border-color 0.3s;" id="cert-fairtrade">
               <span class="material-symbols-outlined" style="font-size: 40px; color: var(--secondary); margin-bottom: 12px;">handshake</span>
-              <h4 class="headline-md" style="font-size: 20px; margin-bottom: 4px;">Fairtrade Certified</h4>
+              <h4 class="headline-md" style="font-size: 20px; margin-bottom: 4px;">${t('trace.fairtrade')}</h4>
               <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--secondary-fixed-dim); margin-top: auto; padding-top: 12px;" id="fairtrade-status">
                 <span class="material-symbols-outlined" style="font-size: 16px; animation: spin 0.8s linear infinite;">sync</span>
-                <span>Verificando cadena...</span>
+                <span>${t('trace.verifying')}</span>
               </div>
             </div>
 
             <div class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: center; flex: 1; border: 1px solid transparent; transition: border-color 0.3s;" id="cert-rainforest">
               <span class="material-symbols-outlined" style="font-size: 40px; color: var(--tertiary); margin-bottom: 12px;">forest</span>
-              <h4 class="headline-md" style="font-size: 20px; margin-bottom: 4px;">Rainforest Alliance</h4>
+              <h4 class="headline-md" style="font-size: 20px; margin-bottom: 4px;">${t('trace.rainforest')}</h4>
               <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tertiary-fixed-dim); margin-top: auto; padding-top: 12px;" id="rainforest-status">
                 <span class="material-symbols-outlined" style="font-size: 16px; animation: spin 0.8s linear infinite;">sync</span>
-                <span>Validando origen...</span>
+                <span>${t('trace.validating')}</span>
               </div>
             </div>
 
@@ -87,20 +87,20 @@ export function renderTraceability() {
               <div style="display: flex; align-items: center; gap: 12px;">
                 <span class="material-symbols-outlined" style="color: var(--outline);">shield_locked</span>
                 <div>
-                  <p class="label-sm" style="color: var(--on-surface-variant);">REGISTRO CRIPTOGRÁFICO</p>
-                  <p style="font-size: 12px; color: var(--outline); margin-top: 4px; font-family: monospace;" id="hash-display">Hash: Cargando...</p>
+                  <p class="label-sm" style="color: var(--on-surface-variant);">${t('trace.crypto')}</p>
+                  <p style="font-size: 12px; color: var(--outline); margin-top: 4px; font-family: monospace;" id="hash-display">Hash: ${t('common.loading')}</p>
                 </div>
               </div>
               <button class="btn btn-secondary" style="font-size: 11px; padding: 10px 20px;" id="btn-details">
                 <span class="material-symbols-outlined" style="font-size: 16px;">receipt_long</span>
-                VER DETALLES TÉCNICOS
+                ${t('trace.viewDetails')}
               </button>
             </div>
 
             <!-- Expandable Technical Details -->
             <div id="tech-details" style="display: none; width: 100%; background: var(--surface-container); border-radius: var(--radius-2xl); padding: 24px; animation: fadeIn 0.3s ease;">
               <div id="tech-details-content">
-                <p class="body-md" style="color: var(--on-surface-variant);">Cargando detalles...</p>
+                <p class="body-md" style="color: var(--on-surface-variant);">${t('trace.loadingDetails')}</p>
               </div>
             </div>
           </div>
@@ -108,9 +108,9 @@ export function renderTraceability() {
 
         <!-- Verification Search -->
         <section style="max-width: 520px; margin: 0 auto; width: 100%; text-align: center;">
-          <h3 class="headline-md" style="margin-bottom: 16px;">Verificar un Lote</h3>
+          <h3 class="headline-md" style="margin-bottom: 16px;">${t('trace.verifyBatch')}</h3>
           <div style="display: flex; gap: 12px;">
-            <input type="text" class="form-field__input" placeholder="Código del lote (ej: LOT-2026-001)" id="verify-input" style="flex: 1; border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-xl);" />
+            <input type="text" class="form-field__input" placeholder="${t('trace.batchPlaceholder')}" id="verify-input" style="flex: 1; border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-xl);" />
             <button class="btn btn-primary" id="verify-btn" style="padding: 12px 24px;">
               <span class="material-symbols-outlined" style="font-size: 20px;">search</span>
             </button>
@@ -152,16 +152,16 @@ export function initTraceability() {
         <div class="card" style="text-align: left; margin-top: 16px; animation: fadeInUp 0.5s ease;">
           <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
             <span class="material-symbols-outlined filled" style="color: var(--tertiary); font-size: 28px;">check_circle</span>
-            <span class="headline-md">Lote ${data.codigo}</span>
+            <span class="headline-md">${t('trace.batchVerified')} ${data.codigo}</span>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">VARIEDAD</span><p class="body-md">${data.variedad || 'N/A'}</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">PESO</span><p class="body-md">${data.peso_kg || 'N/A'} kg</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">ESTADO</span><p class="body-md">${data.estado || 'N/A'}</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">ORIGEN</span><p class="body-md">${data.origen || 'N/A'}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelVariety')}</span><p class="body-md">${data.variedad || 'N/A'}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelWeight')}</span><p class="body-md">${data.peso_kg || 'N/A'} kg</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelStatus')}</span><p class="body-md">${data.estado || 'N/A'}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelOrigin')}</span><p class="body-md">${data.origen || 'N/A'}</p></div>
           </div>
           <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--outline-variant);">
-            <span class="label-sm" style="color: var(--on-surface-variant);">HASH SHA-256</span>
+            <span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelHash')}</span>
             <p style="font-family: monospace; font-size: 11px; color: var(--outline); word-break: break-all; margin-top: 4px;">${data.hash_trazabilidad || 'N/A'}</p>
           </div>
         </div>
@@ -202,11 +202,11 @@ async function loadInitialData() {
       if (techContent) {
         techContent.innerHTML = `
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">CÓDIGO</span><p class="body-md">${lote.codigo}</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">VARIEDAD</span><p class="body-md">${lote.variedad}</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">PESO</span><p class="body-md">${lote.peso_kg} kg</p></div>
-            <div><span class="label-sm" style="color: var(--on-surface-variant);">ESTADO</span><p class="body-md">${lote.estado}</p></div>
-            <div style="grid-column: 1 / -1;"><span class="label-sm" style="color: var(--on-surface-variant);">HASH COMPLETO</span><p style="font-family: monospace; font-size: 11px; color: var(--outline); word-break: break-all; margin-top: 4px;">${lote.hash_trazabilidad}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelCode')}</span><p class="body-md">${lote.codigo}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelVariety')}</span><p class="body-md">${lote.variedad}</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelWeight')}</span><p class="body-md">${lote.peso_kg} kg</p></div>
+            <div><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelStatus')}</span><p class="body-md">${lote.estado}</p></div>
+            <div style="grid-column: 1 / -1;"><span class="label-sm" style="color: var(--on-surface-variant);">${t('trace.labelFullHash')}</span><p style="font-family: monospace; font-size: 11px; color: var(--outline); word-break: break-all; margin-top: 4px;">${lote.hash_trazabilidad}</p></div>
           </div>
         `;
       }

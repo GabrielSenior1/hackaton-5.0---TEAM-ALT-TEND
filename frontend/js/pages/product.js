@@ -12,26 +12,26 @@ export function renderProduct() {
         
         <!-- Header -->
         <section style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center;">
-          <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">MARKETPLACE</p>
-          <h1 class="headline-xl" style="color: var(--on-background);">Tienda KANKU</h1>
+          <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">${t('product.marketplace')}</p>
+          <h1 class="headline-xl" style="color: var(--on-background);">${t('product.title')}</h1>
           <p class="body-lg" style="color: var(--on-surface-variant); max-width: 520px;">
-            Cacao, Café y Banano de la Sierra Nevada — directo del productor
+            ${t('product.subtitle')}
           </p>
         </section>
 
         <!-- Category Filter -->
         <section style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
           <button class="catalog-filter active" data-filter="all" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--secondary-container); color: var(--on-secondary-container); transition: all 0.2s ease;">
-            🌿 Todos
+            🌿 ${t('product.filter.all')}
           </button>
           <button class="catalog-filter" data-filter="cacao" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            🍫 Cacao
+            🍫 ${t('product.filter.cacao')}
           </button>
           <button class="catalog-filter" data-filter="cafe" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            ☕ Café
+            ☕ ${t('product.filter.coffee')}
           </button>
           <button class="catalog-filter" data-filter="banano" style="padding: 10px 24px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--outline-variant); background: var(--surface-container); color: var(--on-surface); transition: all 0.2s ease;">
-            🍌 Banano
+            🍌 ${t('product.filter.banana')}
           </button>
         </section>
 
@@ -39,7 +39,7 @@ export function renderProduct() {
         <section id="catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;">
           <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
             <div class="spinner" style="margin: 0 auto 16px;"></div>
-            <p class="body-md" style="color: var(--on-surface-variant);">Cargando productos...</p>
+            <p class="body-md" style="color: var(--on-surface-variant);">${t('product.loading')}</p>
           </div>
         </section>
 
@@ -97,7 +97,7 @@ async function renderCatalog() {
     grid.innerHTML = `
       <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
         <span class="material-symbols-outlined" style="font-size: 56px; color: var(--outline);">shopping_bag</span>
-        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">No hay productos en esta categoría</p>
+        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">${t('product.empty')}</p>
       </div>
     `;
     return;
@@ -124,7 +124,7 @@ async function renderCatalog() {
           <span style="font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--secondary);">${formatPrice(product.precio || 0)}</span>
           <button class="btn btn-primary catalog-add-cart" data-product-id="${product.id}" style="padding: 8px 16px; font-size: 11px; border-radius: var(--radius-lg);">
             <span class="material-symbols-outlined" style="font-size: 16px;">add_shopping_cart</span>
-            Agregar
+            ${t('product.add')}
           </button>
         </div>
       </div>
@@ -156,7 +156,7 @@ async function renderCatalog() {
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
-      window.__components?.showToast?.('¡Producto añadido al carrito!', 'success');
+      window.__components?.showToast?.(t('product.added'), 'success');
 
       // Update cart drawer
       import('../components/header.js').then(module => {

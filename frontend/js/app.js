@@ -21,21 +21,21 @@ import { initFirebase, getCurrentUser, onAuthChange } from './firebase.js';
 
 // ── Page Registry ────────────────────────────────────────
 const consumerPages = {
-  home:         { render: renderHome,         init: null,              title: 'Inicio' },
-  product:      { render: renderProduct,      init: initProduct,       title: 'Tienda' },
-  traceability: { render: renderTraceability, init: initTraceability,  title: 'Trazabilidad' },
-  story:        { render: renderStory,        init: initStory,         title: 'Historia' },
-  scanner:      { render: renderScanner,      init: initScanner,       title: 'Escanear' },
-  dashboard:    { render: renderDashboard,    init: initDashboard,     title: 'Dashboard' },
+  home:         { render: renderHome,         init: null,              title: () => t('nav.home') },
+  product:      { render: renderProduct,      init: initProduct,       title: () => t('nav.product') },
+  traceability: { render: renderTraceability, init: initTraceability,  title: () => t('nav.traceability') },
+  story:        { render: renderStory,        init: initStory,         title: 'Story' },
+  scanner:      { render: renderScanner,      init: initScanner,       title: () => t('nav.scanner') },
+  dashboard:    { render: renderDashboard,    init: initDashboard,     title: () => t('nav.dashboard') },
   model3d:      { render: renderModel3D,      init: initModel3D,       title: '3D' },
 };
 
 const sellerPages = {
-  'seller-login':    { render: renderSellerLogin,     init: initSellerLogin,     title: 'Iniciar Sesión', noAuth: true },
-  'seller':          { render: renderSellerDashboard,  init: initSellerDashboard,  title: 'Dashboard Vendedor' },
-  'seller-products': { render: renderSellerProducts,   init: initSellerProducts,   title: 'Mis Productos' },
-  'seller-orders':   { render: renderSellerOrders,     init: initSellerOrders,     title: 'Pedidos' },
-  'seller-brand':    { render: renderSellerBrand,      init: initSellerBrand,      title: 'Mi Marca' },
+  'seller-login':    { render: renderSellerLogin,     init: initSellerLogin,     title: () => t('seller.login.login'), noAuth: true },
+  'seller':          { render: renderSellerDashboard,  init: initSellerDashboard,  title: () => t('seller.dashboard.title') },
+  'seller-products': { render: renderSellerProducts,   init: initSellerProducts,   title: () => t('seller.products.title') },
+  'seller-orders':   { render: renderSellerOrders,     init: initSellerOrders,     title: () => t('seller.orders.title') },
+  'seller-brand':    { render: renderSellerBrand,      init: initSellerBrand,      title: () => t('seller.brand.title') },
 };
 
 let currentPage = null;
@@ -84,8 +84,9 @@ function renderPage(pageId) {
     }
   }
 
-  // Update document title
-  document.title = `KANKU — ${page.title}`;
+  // Update document title and html lang
+  document.title = `KANKU — ${typeof page.title === 'function' ? page.title() : page.title}`;
+  document.documentElement.lang = localStorage.getItem('lang') || 'es';
 
   const app = document.getElementById('app');
   if (!app) return;

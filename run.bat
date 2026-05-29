@@ -74,17 +74,17 @@ venv\Scripts\python -m pip install --upgrade pip
 venv\Scripts\pip install -r requirements.txt
 
 :run_app
-:: 4. Iniciar el backend y el frontend en ventanas separadas
+:: 4. Iniciar el backend y el frontend en la misma ventana
 echo ==================================================
 echo   🚀 Iniciando Servidores Cacao de la Sierra 🚀
 echo ==================================================
 echo.
-echo [INFO] Iniciando backend de FastAPI en segundo plano...
-start "Cacao - Backend API" cmd /c "title Cacao Backend && venv\Scripts\uvicorn main:app --reload"
+echo [INFO] Iniciando backend de FastAPI...
+start /b venv\Scripts\uvicorn main:app --reload
 
 if exist "frontend" (
-    echo [INFO] Iniciando frontend de Vite en segundo plano...
-    start "Cacao - Frontend App" cmd /c "title Cacao Frontend && cd frontend && npm run dev"
+    echo [INFO] Iniciando frontend de Vite...
+    start /b cmd /c "cd frontend && npm run dev"
 ) else (
     echo [WARN] No se encontro la carpeta 'frontend' para iniciar.
 )
@@ -101,9 +101,6 @@ if exist "frontend" (
     echo Frontend App corriendo en:  http://localhost:5173
     echo.
 )
-echo Las ventanas del Backend y Frontend se han abierto por separado.
-echo Puedes dejarlas abiertas para trabajar y cerrarlas al terminar.
+echo Presiona Ctrl+C en esta ventana para detener ambos servidores.
 echo ==================================================
-echo Presiona cualquier tecla para finalizar este script de inicio...
-pause >nul
-exit /b 0
+pause

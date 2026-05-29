@@ -14,17 +14,17 @@ export function renderDashboard() {
         <!-- Dashboard Header -->
         <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
-            <h2 class="headline-lg" style="color: var(--on-background);">Dashboard</h2>
-            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">Panel de control — KANKU</p>
+            <h2 class="headline-lg" style="color: var(--on-background);">${t('dashboard.title')}</h2>
+            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">${t('dashboard.subtitle')}</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button class="btn btn-secondary" style="padding: 10px 18px; font-size: 11px; border-radius: var(--radius-xl);" id="btn-refresh-dashboard">
               <span class="material-symbols-outlined" style="font-size: 18px;">refresh</span>
-              ACTUALIZAR
+              ${t('dashboard.refresh')}
             </button>
             <button class="btn btn-primary" style="padding: 10px 18px; font-size: 11px; border-radius: var(--radius-xl);" data-nav="scanner">
               <span class="material-symbols-outlined" style="font-size: 18px;">qr_code_scanner</span>
-              ESCANEAR
+              ${t('dashboard.scan')}
             </button>
           </div>
         </section>
@@ -36,10 +36,10 @@ export function renderDashboard() {
               <span class="material-symbols-outlined filled">group</span>
             </div>
             <div class="kpi-card__value" id="kpi-productores">—</div>
-            <div class="kpi-card__label">Productores Activos</div>
+            <div class="kpi-card__label">${t('dashboard.kpi.producers')}</div>
             <div class="kpi-card__trend kpi-card__trend--up">
               <span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
-              Activos
+              ${t('dashboard.kpi.active')}
             </div>
           </div>
 
@@ -48,10 +48,10 @@ export function renderDashboard() {
               <span class="material-symbols-outlined filled">inventory_2</span>
             </div>
             <div class="kpi-card__value" id="kpi-lotes">—</div>
-            <div class="kpi-card__label">Lotes Registrados</div>
+            <div class="kpi-card__label">${t('dashboard.kpi.batches')}</div>
             <div class="kpi-card__trend kpi-card__trend--up">
               <span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
-              Trazados
+              ${t('dashboard.kpi.traced')}
             </div>
           </div>
 
@@ -60,10 +60,10 @@ export function renderDashboard() {
               <span class="material-symbols-outlined filled">verified</span>
             </div>
             <div class="kpi-card__value" id="kpi-certs">—</div>
-            <div class="kpi-card__label">Certificaciones</div>
+            <div class="kpi-card__label">${t('dashboard.kpi.certs')}</div>
             <div class="kpi-card__trend kpi-card__trend--up">
               <span class="material-symbols-outlined" style="font-size: 14px;">check</span>
-              Vigentes
+              ${t('dashboard.kpi.valid')}
             </div>
           </div>
 
@@ -72,7 +72,7 @@ export function renderDashboard() {
               <span class="material-symbols-outlined filled">sensors</span>
             </div>
             <div class="kpi-card__value" id="kpi-temp">—°C</div>
-            <div class="kpi-card__label">Temperatura Actual</div>
+            <div class="kpi-card__label">${t('dashboard.kpi.temp')}</div>
             <div class="kpi-card__trend kpi-card__trend--up">
               <span class="material-symbols-outlined" style="font-size: 14px;">thermostat</span>
               <span id="kpi-humidity">— %H</span>
@@ -88,31 +88,31 @@ export function renderDashboard() {
             <div class="dashboard-section__header">
               <h3 class="dashboard-section__title">
                 <span class="material-symbols-outlined" style="color: var(--secondary); vertical-align: middle; margin-right: 6px;">inventory_2</span>
-                Lotes de Cacao
+                ${t('dashboard.kpi.batches')}
               </h3>
               <button class="btn btn-gold" style="padding: 8px 16px; font-size: 10px; border-radius: var(--radius-xl);" id="btn-new-lote">
                 <span class="material-symbols-outlined" style="font-size: 16px;">add</span>
-                NUEVO LOTE
+                ${t('dashboard.saveBatch')}
               </button>
             </div>
             <div style="overflow-x: auto; border-radius: var(--radius-lg);">
               <table class="data-table" id="lotes-table">
                 <thead>
                   <tr>
-                    <th>Código</th>
-                    <th>Variedad</th>
-                    <th>Peso (kg)</th>
-                    <th>Estado</th>
-                    <th>Productor</th>
-                    <th>Calidad</th>
-                    <th>Acciones</th>
+                    <th>${t('dashboard.table.code')}</th>
+                    <th>${t('dashboard.table.variety')}</th>
+                    <th>${t('dashboard.table.weight')}</th>
+                    <th>${t('dashboard.table.status')}</th>
+                    <th>${t('dashboard.table.producer')}</th>
+                    <th>${t('dashboard.table.quality')}</th>
+                    <th>${t('dashboard.table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody id="lotes-tbody">
                   <tr>
                     <td colspan="7" style="text-align: center; padding: 40px;">
                       <div class="spinner" style="margin: 0 auto 12px;"></div>
-                      <p class="body-md" style="color: var(--on-surface-variant);">Cargando lotes...</p>
+                      <p class="body-md" style="color: var(--on-surface-variant);">${t('dashboard.loading')}</p>
                     </td>
                   </tr>
                 </tbody>
@@ -129,11 +129,11 @@ export function renderDashboard() {
                 <div class="dashboard-section__header" style="display: flex; justify-content: space-between; align-items: center;">
                   <h3 class="dashboard-section__title">
                     <span class="material-symbols-outlined" style="color: var(--tertiary); vertical-align: middle; margin-right: 6px;">group</span>
-                    Productores
+                    ${t('dashboard.producers')}
                   </h3>
                   <button class="btn btn-primary" style="padding: 6px 12px; font-size: 10px; border-radius: var(--radius-xl); background: var(--tertiary); color: var(--on-tertiary);" id="btn-new-productor">
                     <span class="material-symbols-outlined" style="font-size: 14px;">person_add</span>
-                    NUEVO
+                    ${t('dashboard.new')}
                   </button>
                 </div>
                 <div id="productores-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto;" class="hide-scrollbar">
@@ -150,7 +150,7 @@ export function renderDashboard() {
                 <div class="dashboard-section__header">
                   <h3 class="dashboard-section__title">
                     <span class="material-symbols-outlined" style="color: var(--secondary); vertical-align: middle; margin-right: 6px;">history</span>
-                    Actividad Reciente
+                    ${t('dashboard.recentActivity')}
                   </h3>
                 </div>
                 <div id="activity-timeline" class="timeline" style="max-height: 380px; overflow-y: auto;">
@@ -170,24 +170,24 @@ export function renderDashboard() {
                 <div class="dashboard-section__header">
                   <h3 class="dashboard-section__title">
                     <span class="material-symbols-outlined" style="color: var(--secondary); vertical-align: middle; margin-right: 6px;">qr_code_2</span>
-                    Generador QR Rápido
+                    ${t('dashboard.qrGenerator')}
                   </h3>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 16px;">
                   <div class="form-field">
-                    <label class="form-field__label">Tipo</label>
+                    <label class="form-field__label">${t('dashboard.qrType')}</label>
                     <select class="form-field__select" id="qr-type" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);">
-                      <option value="productor">Productor</option>
-                      <option value="lote">Lote</option>
+                      <option value="productor">${t('dashboard.qrProducer')}</option>
+                      <option value="lote">${t('dashboard.qrBatch')}</option>
                     </select>
                   </div>
                   <div class="form-field">
-                    <label class="form-field__label" id="qr-id-label">ID del Productor</label>
+                    <label class="form-field__label" id="qr-id-label">${t('dashboard.qrProducerId')}</label>
                     <input type="text" class="form-field__input" id="qr-id-input" placeholder="1" style="border: 1px solid var(--outline-variant); padding: 10px 12px; border-radius: var(--radius-lg);" />
                   </div>
                   <button class="btn btn-primary btn-full" id="btn-gen-qr" style="border-radius: var(--radius-xl);">
                     <span class="material-symbols-outlined">qr_code</span>
-                    GENERAR QR
+                    ${t('dashboard.qrGenerate')}
                   </button>
                 </div>
               </section>
@@ -197,7 +197,7 @@ export function renderDashboard() {
             <div class="col-span-full md-col-6">
               <section class="dashboard-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px;" id="qr-result-section">
                 <span class="material-symbols-outlined" style="font-size: 64px; color: var(--outline-variant); opacity: 0.5;">qr_code_2</span>
-                <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">El QR aparecerá aquí</p>
+                <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">${t('dashboard.qrPlaceholder')}</p>
               </section>
             </div>
           </div>
@@ -207,13 +207,13 @@ export function renderDashboard() {
             <div class="dashboard-section__header">
               <h3 class="dashboard-section__title">
                 <span class="material-symbols-outlined" style="color: var(--tertiary); vertical-align: middle; margin-right: 6px;">sensors</span>
-                Datos de Sensores (Tiempo Real)
+                ${t('dashboard.sensors')}
               </h3>
-              <span class="label-sm" style="color: var(--tertiary); background: var(--tertiary-container); padding: 4px 12px; border-radius: 9999px;" id="sensor-status">🔴 Offline</span>
+              <span class="label-sm" style="color: var(--tertiary); background: var(--tertiary-container); padding: 4px 12px; border-radius: 9999px;" id="sensor-status">🔴 ${t('dashboard.sensorsOffline')}</span>
             </div>
             <div id="sensor-data-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
               <div class="card-flat" style="text-align: center; padding: 20px;">
-                <p class="body-md" style="color: var(--on-surface-variant);">Conectando sensores...</p>
+                <p class="body-md" style="color: var(--on-surface-variant);">${t('dashboard.sensorsConnecting')}</p>
               </div>
             </div>
           </section>
@@ -300,8 +300,8 @@ function renderLotesTable(lotes, productores) {
     tbody.innerHTML = `
       <tr><td colspan="7" style="text-align: center; padding: 40px;">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--outline-variant); opacity: 0.5;">inventory_2</span>
-        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">No hay lotes registrados</p>
-        <p class="label-sm" style="color: var(--outline); margin-top: 4px;">Crea el primer lote desde la API</p>
+        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">${t('dashboard.noBatches')}</p>
+        <p class="label-sm" style="color: var(--outline); margin-top: 4px;">${t('dashboard.createFirst')}</p>
       </td></tr>
     `;
     return;
@@ -371,7 +371,7 @@ function renderProductoresList(productores) {
     container.innerHTML = `
       <div style="text-align: center; padding: 32px;">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--outline-variant); opacity: 0.5;">group</span>
-        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">No hay productores</p>
+        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">${t('dashboard.noProducers')}</p>
       </div>
     `;
     return;
@@ -391,7 +391,7 @@ function renderProductoresList(productores) {
       </div>
       <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
         <span style="font-size: 11px; color: var(--outline);">${p.altitud_msnm ? p.altitud_msnm + ' msnm' : ''}</span>
-        <span style="font-size: 11px; color: ${p.activo ? 'var(--tertiary)' : 'var(--error)'}; font-weight: 600;">${p.activo ? '● Activo' : '○ Inactivo'}</span>
+        <span style="font-size: 11px; color: ${p.activo ? 'var(--tertiary)' : 'var(--error)'}; font-weight: 600;">${p.activo ? `● ${t('dashboard.activo')}` : `○ ${t('dashboard.inactivo')}`}</span>
       </div>
     </div>
   `).join('');
@@ -407,7 +407,7 @@ function renderTimeline(lotes, productores) {
   lotes.slice(0, 8).forEach(l => {
     activities.push({
       time: l.fecha_registro ? new Date(l.fecha_registro).toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }) : 'Reciente',
-      content: `Lote ${l.codigo} registrado`,
+      content: `Lote ${l.codigo} ${t('dashboard.registered')}`,
       detail: `${l.variedad} · ${l.peso_kg}kg · ${l.estado}`,
     });
   });
@@ -415,7 +415,7 @@ function renderTimeline(lotes, productores) {
   productores.slice(0, 4).forEach(p => {
     activities.push({
       time: p.fecha_registro ? new Date(p.fecha_registro).toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }) : 'Reciente',
-      content: `Productor ${p.nombre} registrado`,
+      content: `Productor ${p.nombre} ${t('dashboard.registered')}`,
       detail: `${p.finca} · ${p.ubicacion}`,
     });
   });
@@ -424,7 +424,7 @@ function renderTimeline(lotes, productores) {
     container.innerHTML = `
       <div style="text-align: center; padding: 32px;">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--outline-variant); opacity: 0.5;">history</span>
-        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">Sin actividad reciente</p>
+        <p class="body-md" style="color: var(--on-surface-variant); margin-top: 12px;">${t('dashboard.noActivity')}</p>
       </div>
     `;
     container.className = '';
@@ -448,7 +448,7 @@ function initQRGenerator() {
 
   typeSelect?.addEventListener('change', () => {
     if (idLabel) {
-      idLabel.textContent = typeSelect.value === 'productor' ? 'ID del Productor' : 'Código del Lote';
+      idLabel.textContent = typeSelect.value === 'productor' ? t('dashboard.qrProducerId') : t('dashboard.qrBatchCode');
     }
     if (idInput) {
       idInput.placeholder = typeSelect.value === 'productor' ? '1' : 'LOT-2026-001';
@@ -461,7 +461,7 @@ function initQRGenerator() {
     if (!id) return;
 
     genBtn.disabled = true;
-    genBtn.innerHTML = '<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div> Generando...';
+    genBtn.innerHTML = `<div class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></div> ${t('dashboard.qrGenerating')}`;
 
     try {
       let result;
@@ -482,7 +482,7 @@ function initQRGenerator() {
       }
     } finally {
       genBtn.disabled = false;
-      genBtn.innerHTML = '<span class="material-symbols-outlined">qr_code</span> GENERAR QR';
+      genBtn.innerHTML = `<span class="material-symbols-outlined">qr_code</span> ${t('dashboard.qrGenerate')}`;
     }
   });
 }
@@ -499,7 +499,7 @@ function renderQRResult(title, qrUrl) {
       <div style="padding: 16px; background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
         <img src="${imgSrc}" alt="QR Code" style="width: 180px; height: 180px; image-rendering: pixelated;" onerror="this.parentElement.innerHTML='<div style=\\'width:180px;height:180px;display:flex;align-items:center;justify-content:center;background:var(--surface-container-highest);border-radius:8px;\\'>  <span class=\\'material-symbols-outlined\\' style=\\'font-size:48px;color:var(--outline);\\'>qr_code_2</span></div>'" />
       </div>
-      <p class="label-sm" style="color: var(--on-surface-variant);">QR generado exitosamente</p>
+      <p class="label-sm" style="color: var(--on-surface-variant);">${t('dashboard.qrSuccess')}</p>
     </div>
   `;
 }
@@ -510,7 +510,7 @@ function initSensorData() {
 
   subscribeSensorData((data) => {
     if (statusEl) {
-      statusEl.textContent = '🟢 Conectado';
+      statusEl.textContent = `🟢 ${t('dashboard.sensorsConnected')}`;
       statusEl.style.color = 'var(--tertiary)';
     }
 
@@ -529,11 +529,11 @@ function initSensorData() {
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div>
-              <p class="label-sm" style="color: var(--on-surface-variant);">TEMP</p>
+              <p class="label-sm" style="color: var(--on-surface-variant);">${t('dashboard.temp')}</p>
               <p style="font-size: 24px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--on-surface);">${sensor.temperatura || '—'}°</p>
             </div>
             <div>
-              <p class="label-sm" style="color: var(--on-surface-variant);">HUMEDAD</p>
+              <p class="label-sm" style="color: var(--on-surface-variant);">${t('dashboard.humidity')}</p>
               <p style="font-size: 24px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--tertiary);">${sensor.humedad || '—'}%</p>
             </div>
           </div>
@@ -579,7 +579,7 @@ function initDashboardModals() {
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 16px;">
           <h3 class="headline-md" style="color: var(--on-background); margin: 0; display: flex; align-items: center; gap: 10px;">
             <span class="material-symbols-outlined" style="color: var(--tertiary); font-size: 28px;">person_add</span>
-            Registrar Productor
+            ${t('dashboard.registerProducer')}
           </h3>
           <button id="modal-close" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer;">
             <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
@@ -670,10 +670,10 @@ function initDashboardModals() {
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--outline-variant); padding-top: 16px; margin-top: 8px;">
-            <button type="button" id="btn-cancel-productor" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">CANCELAR</button>
+            <button type="button" id="btn-cancel-productor" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">${t('dashboard.cancel')}</button>
             <button type="submit" id="btn-save-productor" class="btn btn-primary" style="background: var(--tertiary); color: var(--on-tertiary); border-radius: var(--radius-xl); padding: 10px 24px; display: inline-flex; align-items: center; gap: 8px;">
               <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
-              GUARDAR PRODUCTOR
+              ${t('dashboard.saveProducer')}
             </button>
           </div>
         </form>
@@ -716,7 +716,7 @@ function initDashboardModals() {
         const imageUrl = await api.uploadImage(file);
         
         if (fotoUrlInput) fotoUrlInput.value = imageUrl;
-        if (statusEl) statusEl.textContent = '¡Imagen subida con éxito!';
+        if (statusEl) statusEl.textContent = t('dashboard.imageUploaded');
         if (filenameEl) filenameEl.textContent = file.name;
         if (previewImg) previewImg.src = imageUrl;
         if (previewContainer) previewContainer.style.display = 'flex';
@@ -761,7 +761,7 @@ function initDashboardModals() {
           border-radius: var(--radius-xl); font-weight: 600; z-index: 10000; box-shadow: var(--shadow-lg);
           font-size: 13px; display: flex; align-items: center; gap: 8px; animation: fadeInScale 0.3s ease;
         `;
-        toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ¡Productor registrado y guardado exitosamente!';
+        toast.innerHTML = `<span class="material-symbols-outlined">check_circle</span> ${t('dashboard.producerSaved')}`;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3500);
 
@@ -771,7 +771,7 @@ function initDashboardModals() {
         alert(`Error al registrar productor: ${err.message}`);
         if (saveBtn) {
           saveBtn.disabled = false;
-          saveBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">save</span> GUARDAR PRODUCTOR';
+          saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size: 18px;">save</span> ${t('dashboard.saveProducer')}`;
         }
       }
     });
@@ -820,7 +820,7 @@ function initDashboardModals() {
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 16px;">
           <h3 class="headline-md" style="color: var(--on-background); margin: 0; display: flex; align-items: center; gap: 10px;">
             <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 28px;">inventory_2</span>
-            Registrar Lote de Cacao
+            ${t('dashboard.registerBatch')}
           </h3>
           <button id="modal-lote-close" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer;">
             <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
@@ -879,10 +879,10 @@ function initDashboardModals() {
           </div>
 
           <div style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid var(--outline-variant); padding-top: 16px; margin-top: 8px;">
-            <button type="button" id="btn-cancel-lote" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">CANCELAR</button>
+            <button type="button" id="btn-cancel-lote" class="btn btn-secondary" style="border-radius: var(--radius-xl); padding: 10px 24px;">${t('dashboard.cancel')}</button>
             <button type="submit" id="btn-save-lote" class="btn btn-primary" style="background: var(--secondary); color: var(--on-secondary); border-radius: var(--radius-xl); padding: 10px 24px; display: inline-flex; align-items: center; gap: 8px;">
               <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
-              REGISTRAR LOTE
+              ${t('dashboard.saveBatch')}
             </button>
           </div>
         </form>
@@ -943,7 +943,7 @@ function initDashboardModals() {
           border-radius: var(--radius-xl); font-weight: 600; z-index: 10000; box-shadow: var(--shadow-lg);
           font-size: 13px; display: flex; align-items: center; gap: 8px; animation: fadeInScale 0.3s ease;
         `;
-        toast.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ¡Lote registrado con trazabilidad SHA-256 e inmutable!';
+        toast.innerHTML = `<span class="material-symbols-outlined">check_circle</span> ${t('dashboard.batchSaved')}`;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3500);
 
@@ -953,7 +953,7 @@ function initDashboardModals() {
         alert(`Error al registrar lote: ${err.message}`);
         if (saveBtn) {
           saveBtn.disabled = false;
-          saveBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">save</span> REGISTRAR LOTE';
+          saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size: 18px;">save</span> ${t('dashboard.saveBatch')}`;
         }
       }
     });

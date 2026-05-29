@@ -19,7 +19,7 @@ export function renderSellerLogin() {
             <span style="font-size: 36px;">🌿</span>
           </div>
           <h1 class="headline-lg" style="color: var(--secondary); font-family: 'Playfair Display', serif;">KANKU</h1>
-          <p class="body-md" style="color: var(--on-surface-variant);">Portal del Vendedor</p>
+          <p class="body-md" style="color: var(--on-surface-variant);">${t('seller.login.title')}</p>
         </div>
 
         <!-- Login/Register Card -->
@@ -28,50 +28,50 @@ export function renderSellerLogin() {
           <!-- Tab Toggle -->
           <div style="display: flex; border-radius: var(--radius-xl); overflow: hidden; background: var(--surface-container-highest); padding: 4px;">
             <button id="tab-login" class="auth-tab active" style="flex: 1; padding: 10px; border-radius: var(--radius-lg); font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s ease; border: none;">
-              INICIAR SESIÓN
+              ${t('seller.login.login')}
             </button>
             <button id="tab-register" class="auth-tab" style="flex: 1; padding: 10px; border-radius: var(--radius-lg); font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s ease; border: none;">
-              REGISTRARSE
+              ${t('seller.login.register')}
             </button>
           </div>
 
           <!-- Login Form -->
           <form id="login-form" style="display: flex; flex-direction: column; gap: 18px;">
             <div class="form-field">
-              <label class="form-field__label" for="login-email">Correo Electrónico</label>
+              <label class="form-field__label" for="login-email">${t('seller.login.email')}</label>
               <input type="email" id="login-email" class="form-field__input" placeholder="tu@correo.com" required
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <div class="form-field">
-              <label class="form-field__label" for="login-password">Contraseña</label>
+              <label class="form-field__label" for="login-password">${t('seller.login.password')}</label>
               <input type="password" id="login-password" class="form-field__input" placeholder="••••••••" required
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <button type="submit" class="btn btn-primary btn-full" style="padding: 16px; border-radius: var(--radius-xl);">
               <span class="material-symbols-outlined" style="font-size: 18px;">login</span>
-              ENTRAR
+              ${t('seller.login.enter')}
             </button>
           </form>
 
           <!-- Register Form (Hidden by default) -->
           <form id="register-form" style="display: none; flex-direction: column; gap: 18px;">
             <div class="form-field">
-              <label class="form-field__label" for="reg-brand">Nombre de tu Marca</label>
+              <label class="form-field__label" for="reg-brand">${t('seller.login.brandName')}</label>
               <input type="text" id="reg-brand" class="form-field__input" placeholder="Ej: Finca El Mirador" required
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <div class="form-field">
-              <label class="form-field__label" for="reg-email">Correo Electrónico</label>
+              <label class="form-field__label" for="reg-email">${t('seller.login.email')}</label>
               <input type="email" id="reg-email" class="form-field__input" placeholder="tu@correo.com" required
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <div class="form-field">
-              <label class="form-field__label" for="reg-password">Contraseña (mín. 6 caracteres)</label>
+              <label class="form-field__label" for="reg-password">${t('seller.login.password')} (mín. 6 caracteres)</label>
               <input type="password" id="reg-password" class="form-field__input" placeholder="••••••••" required minlength="6"
                 style="border: 1px solid var(--outline-variant); padding: 12px 16px; border-radius: var(--radius-lg);" />
             </div>
             <div class="form-field">
-              <label class="form-field__label">¿Qué productos vendes?</label>
+              <label class="form-field__label">${t('seller.login.whatProducts')}</label>
               <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px;">
                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">
                   <input type="checkbox" name="categoria" value="cacao" checked style="accent-color: var(--secondary);"> 🍫 Cacao
@@ -86,7 +86,7 @@ export function renderSellerLogin() {
             </div>
             <button type="submit" class="btn btn-primary btn-full" style="padding: 16px; border-radius: var(--radius-xl);">
               <span class="material-symbols-outlined" style="font-size: 18px;">person_add</span>
-              CREAR CUENTA DE VENDEDOR
+              ${t('seller.login.createAccount')}
             </button>
           </form>
 
@@ -98,7 +98,7 @@ export function renderSellerLogin() {
         <div style="text-align: center;">
           <a data-nav="home" style="cursor: pointer; color: var(--on-surface-variant); font-size: 14px; display: inline-flex; align-items: center; gap: 6px; text-decoration: underline;">
             <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
-            Volver a la tienda
+            ${t('seller.login.back')}
           </a>
         </div>
       </div>
@@ -148,21 +148,21 @@ export function initSellerLogin() {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     
-    showStatus('Iniciando sesión...', 'info');
+    showStatus(t('seller.login.signingIn'), 'info');
 
     try {
       await loginUser(email, password);
       localStorage.setItem('kanku_role', 'seller');
-      showStatus('¡Bienvenido! Redirigiendo...', 'success');
+      showStatus(t('seller.login.welcome'), 'success');
       setTimeout(() => {
         window.location.hash = '#/seller';
         window.location.reload();
       }, 800);
     } catch (err) {
-      const msg = err.code === 'auth/invalid-credential' ? 'Correo o contraseña incorrectos'
-        : err.code === 'auth/user-not-found' ? 'Usuario no encontrado'
-        : err.code === 'auth/wrong-password' ? 'Contraseña incorrecta'
-        : err.code === 'auth/too-many-requests' ? 'Demasiados intentos. Intenta más tarde.'
+      const msg = err.code === 'auth/invalid-credential' ? t('seller.login.invalidCredentials')
+        : err.code === 'auth/user-not-found' ? t('seller.login.userNotFound')
+        : err.code === 'auth/wrong-password' ? t('seller.login.wrongPassword')
+        : err.code === 'auth/too-many-requests' ? t('seller.login.tooManyRequests')
         : `Error: ${err.message}`;
       showStatus(msg, 'error');
     }
@@ -179,11 +179,11 @@ export function initSellerLogin() {
       .map(cb => cb.value);
 
     if (categorias.length === 0) {
-      showStatus('Selecciona al menos una categoría de producto', 'error');
+      showStatus(t('seller.login.selectCategory'), 'error');
       return;
     }
 
-    showStatus('Creando cuenta...', 'info');
+    showStatus(t('seller.login.creating'), 'info');
 
     try {
       const cred = await registerUser(email, password);
@@ -196,14 +196,14 @@ export function initSellerLogin() {
         categorias,
       });
       localStorage.setItem('kanku_role', 'seller');
-      showStatus('¡Cuenta creada! Redirigiendo...', 'success');
+      showStatus(t('seller.login.accountCreated'), 'success');
       setTimeout(() => {
         window.location.hash = '#/seller';
         window.location.reload();
       }, 800);
     } catch (err) {
-      const msg = err.code === 'auth/email-already-in-use' ? 'Este correo ya está registrado'
-        : err.code === 'auth/weak-password' ? 'La contraseña debe tener mínimo 6 caracteres'
+      const msg = err.code === 'auth/email-already-in-use' ? t('seller.login.emailInUse')
+        : err.code === 'auth/weak-password' ? t('seller.login.weakPassword')
         : `Error: ${err.message}`;
       showStatus(msg, 'error');
     }
