@@ -10,8 +10,8 @@ export function renderSellerBrand() {
       <div class="container" style="padding: 32px 24px; display: flex; flex-direction: column; gap: 28px; max-width: 800px;">
 
         <section>
-          <h2 class="headline-lg" style="color: var(--on-background);">Mi Marca</h2>
-          <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">Configura tu identidad como vendedor en KANKU</p>
+          <h2 class="headline-lg" style="color: var(--on-background);">${t('seller.brand.title')}</h2>
+          <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;">${t('seller.brand.subtitle')}</p>
         </section>
 
         <!-- Brand Form -->
@@ -24,11 +24,11 @@ export function renderSellerBrand() {
               <span id="brand-logo-placeholder" class="material-symbols-outlined" style="font-size: 40px; color: var(--outline);">storefront</span>
             </div>
             <div style="flex: 1; min-width: 200px;">
-              <h4 style="font-weight: 700; margin-bottom: 8px;">Logo de tu Marca</h4>
-              <p style="font-size: 13px; color: var(--on-surface-variant); margin-bottom: 12px;">Sube una imagen cuadrada para el mejor resultado</p>
+              <h4 style="font-weight: 700; margin-bottom: 8px;">${t('seller.brand.logoTitle')}</h4>
+              <p style="font-size: 13px; color: var(--on-surface-variant); margin-bottom: 12px;">${t('seller.brand.logoDesc')}</p>
               <label style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-lg); background: var(--surface-container-highest); cursor: pointer; font-size: 13px; font-weight: 600;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">upload</span>
-                Cambiar Logo
+                ${t('seller.brand.changeLogo')}
                 <input type="file" id="brand-logo-input" accept="image/*" style="display: none;" />
               </label>
             </div>
@@ -36,28 +36,28 @@ export function renderSellerBrand() {
 
           <!-- Brand Name -->
           <div class="form-field">
-            <label class="form-field__label" for="brand-name">Nombre de la Marca</label>
-            <input type="text" id="brand-name" class="form-field__input" placeholder="Ej: Finca El Mirador" required
+            <label class="form-field__label" for="brand-name">${t('seller.brand.name')}</label>
+            <input type="text" id="brand-name" class="form-field__input" placeholder="${t('seller.brand.placeholderName')}" required
               style="border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-lg); font-size: 16px;" />
           </div>
 
           <!-- Description -->
           <div class="form-field">
-            <label class="form-field__label" for="brand-desc">Descripción</label>
-            <textarea id="brand-desc" class="form-field__input" placeholder="Cuenta la historia de tu marca..." rows="4"
+            <label class="form-field__label" for="brand-desc">${t('seller.brand.description')}</label>
+            <textarea id="brand-desc" class="form-field__input" placeholder="${t('seller.brand.placeholderDesc')}" rows="4"
               style="border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-lg); resize: vertical;"></textarea>
           </div>
 
           <!-- Location -->
           <div class="form-field">
-            <label class="form-field__label" for="brand-location">Ubicación</label>
-            <input type="text" id="brand-location" class="form-field__input" placeholder="Ej: Sierra Nevada, Magdalena"
+            <label class="form-field__label" for="brand-location">${t('seller.brand.location')}</label>
+            <input type="text" id="brand-location" class="form-field__input" placeholder="${t('seller.brand.placeholderLocation')}"
               style="border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-lg);" />
           </div>
 
           <!-- Categories -->
           <div class="form-field">
-            <label class="form-field__label">Categorías que Manejo</label>
+            <label class="form-field__label">${t('seller.brand.categories')}</label>
             <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
               <label class="category-check" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 20px; border-radius: var(--radius-xl); border: 1px solid var(--outline-variant); background: var(--surface-container); transition: all 0.2s ease; font-weight: 600;">
                 <input type="checkbox" name="brand-cat" value="cacao" style="accent-color: var(--secondary); width: 18px; height: 18px;" /> 
@@ -77,7 +77,7 @@ export function renderSellerBrand() {
           <!-- Save Button -->
           <button type="submit" class="btn btn-primary btn-full" style="padding: 18px; border-radius: var(--radius-xl);" id="brand-save-btn">
             <span class="material-symbols-outlined" style="font-size: 18px;">save</span>
-            GUARDAR CAMBIOS
+            ${t('seller.brand.save')}
           </button>
 
           <!-- Status -->
@@ -137,7 +137,7 @@ export async function initSellerBrand() {
     e.preventDefault();
     const saveBtn = document.getElementById('brand-save-btn');
     saveBtn.disabled = true;
-    saveBtn.innerHTML = '<span class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></span> Guardando...';
+    saveBtn.innerHTML = `<span class="spinner" style="width: 18px; height: 18px; border-width: 2px;"></span> ${t('seller.brand.saving')}`;
 
     try {
       const data = {
@@ -159,19 +159,19 @@ export async function initSellerBrand() {
       const statusEl = document.getElementById('brand-status');
       if (statusEl) {
         statusEl.style.display = 'block';
-        statusEl.textContent = '✅ Marca actualizada exitosamente';
+        statusEl.textContent = `✅ ${t('seller.brand.saved')}`;
         statusEl.style.background = 'var(--tertiary-container)';
         statusEl.style.color = 'var(--on-tertiary-container)';
         setTimeout(() => statusEl.style.display = 'none', 3000);
       }
 
-      window.__components?.showToast?.('Marca actualizada', 'success');
+      window.__components?.showToast?.(t('seller.brand.saved'), 'success');
     } catch (e) {
       console.error('Error saving brand:', e);
-      window.__components?.showToast?.('Error guardando marca: ' + e.message, 'error');
+      window.__components?.showToast?.(t('seller.brand.error') + ': ' + e.message, 'error');
     } finally {
       saveBtn.disabled = false;
-      saveBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">save</span> GUARDAR CAMBIOS';
+      saveBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size: 18px;">save</span> ${t('seller.brand.save')}`;
     }
   });
 }

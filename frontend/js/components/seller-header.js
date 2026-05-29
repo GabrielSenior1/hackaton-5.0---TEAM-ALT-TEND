@@ -5,10 +5,10 @@ import { logoutUser, getCurrentUser, getVendedor } from '../firebase.js';
 
 export function renderSellerHeader(activePage = 'seller') {
   const navItems = [
-    { id: 'seller', label: 'Dashboard', icon: 'dashboard' },
-    { id: 'seller-products', label: 'Mis Productos', icon: 'inventory_2' },
-    { id: 'seller-orders', label: 'Pedidos', icon: 'receipt_long' },
-    { id: 'seller-brand', label: 'Mi Marca', icon: 'storefront' },
+    { id: 'seller', label: t('seller.header.dashboard'), icon: 'dashboard' },
+    { id: 'seller-products', label: t('seller.header.products'), icon: 'inventory_2' },
+    { id: 'seller-orders', label: t('seller.header.orders'), icon: 'receipt_long' },
+    { id: 'seller-brand', label: t('seller.header.brand'), icon: 'storefront' },
   ];
 
   return `
@@ -19,7 +19,7 @@ export function renderSellerHeader(activePage = 'seller') {
           <span style="font-size: 28px;">🌿</span>
           <span style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: var(--secondary);">KANKU</span>
         </a>
-        <span class="label-sm" style="color: var(--on-surface-variant); margin-top: 4px; display: block;">Portal Vendedor</span>
+        <span class="label-sm" style="color: var(--on-surface-variant); margin-top: 4px; display: block;">${t('seller.header.portal')}</span>
       </div>
 
       <nav class="seller-sidebar__nav">
@@ -44,12 +44,12 @@ export function renderSellerHeader(activePage = 'seller') {
 
         <button id="seller-logout-btn" class="seller-sidebar__link" style="color: var(--error); margin-top: 8px;">
           <span class="material-symbols-outlined">logout</span>
-          <span>Cerrar Sesión</span>
+          <span>${t('seller.header.logout')}</span>
         </button>
 
         <a data-nav="home" class="seller-sidebar__link" style="margin-top: 4px;">
           <span class="material-symbols-outlined">shopping_bag</span>
-          <span>Ir a la Tienda</span>
+          <span>${t('seller.header.goToStore')}</span>
         </a>
       </div>
     </aside>

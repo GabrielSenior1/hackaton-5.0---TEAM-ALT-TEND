@@ -13,17 +13,17 @@ export function renderSellerDashboard() {
         <!-- Welcome Header -->
         <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
-            <h2 class="headline-lg" style="color: var(--on-background);">Dashboard</h2>
-            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;" id="seller-welcome-text">Bienvenido a KANKU</p>
+            <h2 class="headline-lg" style="color: var(--on-background);">${t('seller.dashboard.title')}</h2>
+            <p class="body-md" style="color: var(--on-surface-variant); margin-top: 4px;" id="seller-welcome-text">${t('seller.dashboard.welcome')}</p>
           </div>
           <div style="display: flex; gap: 10px;">
             <button class="btn btn-secondary" style="padding: 10px 18px; font-size: 11px; border-radius: var(--radius-xl);" id="btn-refresh-seller-dash">
               <span class="material-symbols-outlined" style="font-size: 18px;">refresh</span>
-              ACTUALIZAR
+              ${t('seller.dashboard.refresh')}
             </button>
             <button class="btn btn-primary" style="padding: 10px 18px; font-size: 11px; border-radius: var(--radius-xl);" data-nav="seller-products">
               <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
-              NUEVO PRODUCTO
+              ${t('seller.dashboard.newProduct')}
             </button>
           </div>
         </section>
@@ -35,7 +35,7 @@ export function renderSellerDashboard() {
               <span class="material-symbols-outlined filled">inventory_2</span>
             </div>
             <div class="kpi-card__value" id="seller-kpi-products">—</div>
-            <div class="kpi-card__label">Productos Activos</div>
+            <div class="kpi-card__label">${t('seller.dashboard.kpi.activeProducts')}</div>
           </div>
 
           <div class="kpi-card animate-fade-in-up stagger-2" style="opacity: 0;">
@@ -43,7 +43,7 @@ export function renderSellerDashboard() {
               <span class="material-symbols-outlined filled">receipt_long</span>
             </div>
             <div class="kpi-card__value" id="seller-kpi-orders">—</div>
-            <div class="kpi-card__label">Pedidos Totales</div>
+            <div class="kpi-card__label">${t('seller.dashboard.kpi.totalOrders')}</div>
           </div>
 
           <div class="kpi-card animate-fade-in-up stagger-3" style="opacity: 0;">
@@ -51,7 +51,7 @@ export function renderSellerDashboard() {
               <span class="material-symbols-outlined filled">pending_actions</span>
             </div>
             <div class="kpi-card__value" id="seller-kpi-pending">—</div>
-            <div class="kpi-card__label">Pendientes</div>
+            <div class="kpi-card__label">${t('seller.dashboard.kpi.pending')}</div>
           </div>
 
           <div class="kpi-card animate-fade-in-up stagger-4" style="opacity: 0;">
@@ -59,38 +59,38 @@ export function renderSellerDashboard() {
               <span class="material-symbols-outlined filled">payments</span>
             </div>
             <div class="kpi-card__value" id="seller-kpi-revenue">—</div>
-            <div class="kpi-card__label">Ingresos Totales</div>
+            <div class="kpi-card__label">${t('seller.dashboard.kpi.revenue')}</div>
           </div>
         </section>
 
         <!-- Quick Actions -->
         <section>
-          <h3 class="headline-md" style="margin-bottom: 16px;">Acciones Rápidas</h3>
+          <h3 class="headline-md" style="margin-bottom: 16px;">${t('seller.dashboard.quickActions')}</h3>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             
             <div class="card" style="cursor: pointer; text-align: center; padding: 28px 20px;" data-nav="seller-products">
               <span class="material-symbols-outlined" style="font-size: 40px; color: var(--secondary); margin-bottom: 12px;">add_circle</span>
-              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">Agregar Producto</h4>
-              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">Cacao, Café o Banano</p>
+              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">${t('seller.dashboard.addProduct')}</h4>
+              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">${t('seller.dashboard.addProductDesc')}</p>
             </div>
 
             <div class="card" style="cursor: pointer; text-align: center; padding: 28px 20px;" data-nav="seller-orders">
               <span class="material-symbols-outlined" style="font-size: 40px; color: var(--tertiary); margin-bottom: 12px;">local_shipping</span>
-              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">Ver Pedidos</h4>
-              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">Gestiona tus envíos</p>
+              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">${t('seller.dashboard.viewOrders')}</h4>
+              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">${t('seller.dashboard.viewOrdersDesc')}</p>
             </div>
 
             <div class="card" style="cursor: pointer; text-align: center; padding: 28px 20px;" data-nav="seller-brand">
               <span class="material-symbols-outlined" style="font-size: 40px; color: var(--primary); margin-bottom: 12px;">palette</span>
-              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">Mi Marca</h4>
-              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">Configura tu perfil</p>
+              <h4 style="font-weight: 700; font-size: 15px; margin-bottom: 4px;">${t('seller.dashboard.myBrand')}</h4>
+              <p class="body-md" style="color: var(--on-surface-variant); font-size: 13px;">${t('seller.dashboard.myBrandDesc')}</p>
             </div>
           </div>
         </section>
 
         <!-- Categories Overview -->
         <section>
-          <h3 class="headline-md" style="margin-bottom: 16px;">Mis Categorías</h3>
+          <h3 class="headline-md" style="margin-bottom: 16px;">${t('seller.dashboard.myCategories')}</h3>
           <div id="seller-categories-overview" style="display: flex; gap: 16px; flex-wrap: wrap;">
             <div class="card-flat" style="flex: 1; min-width: 160px; text-align: center; padding: 24px;">
               <span style="font-size: 40px;">🍫</span>
@@ -124,7 +124,7 @@ export async function initSellerDashboard() {
     const vendedor = await getVendedor(user.uid);
     if (vendedor?.nombreMarca) {
       const welcome = document.getElementById('seller-welcome-text');
-      if (welcome) welcome.textContent = `Bienvenido, ${vendedor.nombreMarca}`;
+      if (welcome) welcome.textContent = `${t('seller.dashboard.welcomeUser')}, ${vendedor.nombreMarca}`;
     }
   } catch (e) { console.warn(e); }
 
@@ -153,7 +153,7 @@ export async function initSellerDashboard() {
 
     const setCount = (id, count) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = `${count} producto${count !== 1 ? 's' : ''}`;
+      if (el) el.textContent = `${count} ${t('seller.dashboard.products')}`;
     };
     setCount('cat-count-cacao', cacaoCount);
     setCount('cat-count-cafe', cafeCount);

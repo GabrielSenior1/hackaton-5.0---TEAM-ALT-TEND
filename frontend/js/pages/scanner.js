@@ -17,9 +17,9 @@ export function renderScanner() {
           <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--secondary-container); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
             <span class="material-symbols-outlined filled" style="color: var(--on-secondary-container); font-size: 36px;">qr_code_scanner</span>
           </div>
-          <h2 class="headline-xl gold-gradient-text">Escanear QR</h2>
+          <h2 class="headline-xl gold-gradient-text">${t('scanner.title')}</h2>
           <p class="body-md" style="color: var(--on-surface-variant);">
-            Apunta la cámara al código QR en tu producto para verificar su origen y autenticidad.
+            ${t('scanner.subtitle')}
           </p>
         </section>
 
@@ -28,14 +28,14 @@ export function renderScanner() {
           <div class="qr-scanner-container" id="qr-reader" style="min-height: 350px; display: flex; align-items: center; justify-content: center;">
             <div style="text-align: center; padding: 40px; color: var(--inverse-on-surface);">
               <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.5; display: block; margin-bottom: 16px;">videocam</span>
-              <p class="body-md" style="opacity: 0.7;">Presiona el botón para iniciar la cámara</p>
+              <p class="body-md" style="opacity: 0.7;">${t('scanner.startCamera')}</p>
             </div>
           </div>
           
           <div style="display: flex; gap: 12px; margin-top: 20px;">
             <button class="btn btn-primary btn-full" id="start-scan" style="border-radius: var(--radius-xl);">
               <span class="material-symbols-outlined">photo_camera</span>
-              INICIAR CÁMARA
+              ${t('scanner.startBtn')}
             </button>
             <button class="btn btn-secondary" id="stop-scan" style="border-radius: var(--radius-xl); display: none; padding: 14px 20px;">
               <span class="material-symbols-outlined">stop</span>
@@ -47,11 +47,11 @@ export function renderScanner() {
         <section style="width: 100%; max-width: 500px;">
           <div style="position: relative; display: flex; align-items: center;">
             <div style="flex: 1; height: 1px; background: var(--outline-variant);"></div>
-            <span class="label-sm" style="padding: 0 16px; color: var(--on-surface-variant);">O INGRESA EL CÓDIGO</span>
+            <span class="label-sm" style="padding: 0 16px; color: var(--on-surface-variant);">${t('scanner.orEnter')}</span>
             <div style="flex: 1; height: 1px; background: var(--outline-variant);"></div>
           </div>
           <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <input type="text" class="form-field__input" placeholder="LOT-2026-001" id="manual-code" 
+            <input type="text" class="form-field__input" placeholder="${t('scanner.enterPlaceholder')}" id="manual-code" 
               style="flex: 1; border: 1px solid var(--outline-variant); padding: 14px 16px; border-radius: var(--radius-xl);" />
             <button class="btn btn-gold" id="manual-verify" style="padding: 14px 24px; border-radius: var(--radius-xl);">
               <span class="material-symbols-outlined">verified_user</span>
@@ -102,7 +102,7 @@ async function startScanning() {
     try {
       await loadScript('https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js');
     } catch (e) {
-      showScanResult('error', 'Error', 'No se pudo cargar el escáner. Usa el campo manual.');
+      showScanResult('error', t('common.error'), t('scanner.cameraError'));
       return;
     }
   }
@@ -130,7 +130,7 @@ async function startScanning() {
     if (stopBtn) stopBtn.style.display = 'flex';
   } catch (err) {
     console.error('Scanner error:', err);
-    showScanResult('error', 'Error de Cámara', 'No se pudo acceder a la cámara. Verifica los permisos o usa el campo manual.');
+    showScanResult('error', 'Error', t('scanner.cameraAccessError'));
   }
 }
 
@@ -167,7 +167,7 @@ async function processCode(code) {
   container.innerHTML = `
     <div style="text-align: center; padding: 32px;">
       <div class="spinner" style="margin: 0 auto 16px;"></div>
-      <p class="body-md" style="color: var(--on-surface-variant);">Verificando lote ${code}...</p>
+      <p class="body-md" style="color: var(--on-surface-variant);">${t('scanner.verifying')} ${code}...</p>
     </div>
   `;
 
@@ -175,7 +175,7 @@ async function processCode(code) {
     const data = await api.verificarLote(code);
     showScanResult('success', `Lote ${data.codigo} Verificado`, '', data);
   } catch (error) {
-    showScanResult('error', 'No Encontrado', `No se pudo verificar el código "${code}". ${error.message}`);
+    showScanResult('error', t('scanner.notFound'), `${t('scanner.notFoundMsg')} "${code}". ${error.message}`);
   }
 }
 
@@ -199,7 +199,7 @@ function showScanResult(type, title, message, data = null) {
       <div style="margin-top: 16px; display: flex; gap: 8px;">
         <button class="btn btn-primary btn-full" style="border-radius: var(--radius-xl);" data-nav="traceability">
           <span class="material-symbols-outlined">verified_user</span>
-          VER TRAZABILIDAD COMPLETA
+          ${t('scanner.viewTraceability')}
         </button>
       </div>
     `;
