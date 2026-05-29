@@ -3,8 +3,9 @@
  * Shows all products from all sellers with category filtering
  */
 import { formatPrice } from '../api.js';
-import { getAllProductos, getVendedor, getReviewsForProducts } from '../firebase.js';
+import { getAllProductos, getReviewsForProducts } from '../firebase.js';
 import { updateCartBadge } from '../components/header.js';
+import { openProductModal } from '../components/product-modal.js';
 
 export function renderProduct() {
   return `
@@ -14,15 +15,15 @@ export function renderProduct() {
       <div class="ambient-blob ambient-blob--green" style="bottom: 15%; right: -5%; width: 350px; height: 350px;"></div>
 
       <!-- Compact Hero Banner -->
-      <section class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding-top: 24px; padding-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 28px;">🌿</span>
-          <h1 class="headline-lg gold-gradient-text" style="margin: 0;">KANKU</h1>
+      <section class="hero-banner">
+        <div class="hero-banner__logo">
+          <span>🌿</span>
+          <span class="gold-gradient-text">KANKU</span>
         </div>
-        <p class="body-md" style="color: var(--on-surface-variant); max-width: 480px; font-size: 14px;">
+        <p class="hero-banner__subtitle">
           Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.
         </p>
-        <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em;">${t('home.hero.honor')}</p>
+        <p class="label-sm" style="color: var(--secondary); letter-spacing: 0.15em; margin-top: 8px;">${t('home.hero.honor')}</p>
       </section>
 
       <main class="container" style="padding-bottom: 60px; display: flex; flex-direction: column; gap: 32px;">
@@ -60,11 +61,11 @@ export function renderProduct() {
 
         <!-- CTA Buttons -->
         <section style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; padding-top: 16px;">
-          <button class="btn btn-primary" style="padding: 18px 36px; border-radius: 9999px;" data-nav="scanner">
+          <button class="btn btn-gold" style="padding: 18px 36px; border-radius: 9999px;" data-nav="scanner">
             <span class="material-symbols-outlined filled">qr_code_scanner</span>
             <span>${t('home.cta.scan')}</span>
           </button>
-          <button class="btn btn-secondary" style="padding: 18px 36px; border-radius: 9999px;" data-nav="seller-login">
+          <button class="btn btn-outline-gold" style="padding: 18px 36px; border-radius: 9999px;" data-nav="seller-login">
             <span class="material-symbols-outlined">storefront</span>
             <span>${t('home.cta.seller')}</span>
           </button>
@@ -297,7 +298,7 @@ async function renderCatalog() {
     const count = ratings?.length || 0;
 
     return `
-    <div class="card animate-fade-in-up stagger-${(idx % 5) + 1}" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; opacity: 0; cursor: pointer;">
+    <div class="card animate-fade-in-up stagger-${(idx % 5) + 1}" data-product-id="${product.id}" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; opacity: 0; cursor: pointer;">
       <div style="width: 100%; height: 200px; background: var(--surface-container-low); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
         ${product.imagenUrl
           ? `<img src="${product.imagenUrl}" alt="${product.nombre}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />`
@@ -351,6 +352,17 @@ async function renderCatalog() {
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartBadge();
       window.__components?.showToast?.(t('product.added'), 'success');
+    });
+  });
+
+  // Product card click → open modal
+  grid.querySelectorAll('.card[data-product-id]').forEach(card => {
+    card.addEventListener('click', () => {
+      const pid = card.dataset.productId;
+      const product = catalogProducts.find(p => p.id === pid);
+      if (product) {
+        openProductModal(product, catalogReviews);
+      }
     });
   });
 }

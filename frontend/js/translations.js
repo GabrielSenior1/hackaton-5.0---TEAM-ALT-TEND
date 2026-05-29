@@ -5,7 +5,7 @@ const translations = {
     'nav.traceability': 'Transparencia',
     'nav.scanner': 'Escanear',
     'nav.dashboard': 'Dashboard',
-    'nav.seller': 'Vender',
+    'nav.seller': 'Vende Aquí',
     'nav.panel': 'Panel',
     'nav.cart': 'Carrito',
 
@@ -66,6 +66,11 @@ const translations = {
     'product.empty': 'No hay productos en esta categoría',
     'product.add': 'Agregar',
     'product.added': '¡Producto añadido al carrito!',
+    'product.detail.seller': 'Vendido por',
+    'product.detail.category': 'Categoría',
+    'product.detail.similar': 'Productos Similares',
+    'product.detail.stock': 'disponibles',
+    'product.detail.close': 'Cerrar',
 
     'trace.title': 'TRAZABILIDAD TÉCNICA',
     'trace.subtitle': 'Verificación en Tiempo Real',
@@ -370,7 +375,7 @@ const translations = {
     'nav.traceability': 'Transparency',
     'nav.scanner': 'Scan',
     'nav.dashboard': 'Dashboard',
-    'nav.seller': 'Sell',
+    'nav.seller': 'Sell Here',
     'nav.panel': 'Panel',
     'nav.cart': 'Cart',
 
@@ -431,6 +436,11 @@ const translations = {
     'product.empty': 'No products in this category',
     'product.add': 'Add',
     'product.added': 'Product added to cart!',
+    'product.detail.seller': 'Sold by',
+    'product.detail.category': 'Category',
+    'product.detail.similar': 'Similar Products',
+    'product.detail.stock': 'in stock',
+    'product.detail.close': 'Close',
 
     'trace.title': 'TECHNICAL TRACEABILITY',
     'trace.subtitle': 'Real-Time Verification',
@@ -735,7 +745,7 @@ const translations = {
     'nav.traceability': 'Transparence',
     'nav.scanner': 'Scanner',
     'nav.dashboard': 'Tableau de bord',
-    'nav.seller': 'Vendre',
+    'nav.seller': 'Vendez Ici',
     'nav.panel': 'Panneau',
     'nav.cart': 'Panier',
 
@@ -796,6 +806,11 @@ const translations = {
     'product.empty': 'Aucun produit dans cette catégorie',
     'product.add': 'Ajouter',
     'product.added': 'Produit ajouté au panier!',
+    'product.detail.seller': 'Vendu par',
+    'product.detail.category': 'Catégorie',
+    'product.detail.similar': 'Produits Similaires',
+    'product.detail.stock': 'disponibles',
+    'product.detail.close': 'Fermer',
 
     'trace.title': 'TRACABILITÉ TECHNIQUE',
     'trace.subtitle': 'Vérification en Temps Réel',
@@ -1100,7 +1115,7 @@ const translations = {
     'nav.traceability': 'Transparência',
     'nav.scanner': 'Escanear',
     'nav.dashboard': 'Painel',
-    'nav.seller': 'Vender',
+    'nav.seller': 'Venda Aqui',
     'nav.panel': 'Painel',
     'nav.cart': 'Carrinho',
 
@@ -1161,6 +1176,11 @@ const translations = {
     'product.empty': 'Nenhum produto nesta categoria',
     'product.add': 'Adicionar',
     'product.added': 'Produto adicionado ao carrinho!',
+    'product.detail.seller': 'Vendido por',
+    'product.detail.category': 'Categoria',
+    'product.detail.similar': 'Produtos Similares',
+    'product.detail.stock': 'disponíveis',
+    'product.detail.close': 'Fechar',
 
     'trace.title': 'RASTREABILIDADE TÉCNICA',
     'trace.subtitle': 'Verificação em Tempo Real',

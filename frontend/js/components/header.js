@@ -136,13 +136,7 @@ export function renderHeader(activePage = 'product') {
         <button id="btn-cart-toggle" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--surface-container-highest); border: 0.5px solid var(--outline-variant); cursor: pointer;" title="${t('header.viewCart')}">
           <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 20px;">shopping_cart</span>
           ${cartCount > 0 ? `
-            <span id="cart-badge-count" style="
-              position: absolute; top: -4px; right: -4px;
-              background: var(--tertiary); color: var(--on-tertiary);
-              font-size: 10px; font-weight: 700; width: 18px; height: 18px;
-              border-radius: 50%; display: flex; align-items: center; justify-content: center;
-              box-shadow: var(--shadow-sm); border: 1.5px solid var(--background);
-            ">${cartCount}</span>
+            <span id="cart-badge-count" class="cart-badge">${cartCount}</span>
           ` : ''}
         </button>
 
@@ -154,35 +148,41 @@ export function renderHeader(activePage = 'product') {
       </div>
     </header>
 
-    <!-- Shopping Cart Drawer (Drawer Lateral Premium) -->
+    <!-- Shopping Cart Drawer -->
     <div id="cart-drawer" style="
-      position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100vh;
-      background: var(--background); border-left: 1px solid var(--outline-variant);
-      box-shadow: var(--shadow-xl); z-index: 10000; display: flex; flex-direction: column;
-      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); padding: 28px; box-sizing: border-box;
+      position: fixed; top: 0; right: -440px; width: 100%; max-width: 420px; height: 100vh;
+      background: var(--surface-container-low); z-index: 10000; display: flex; flex-direction: column;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1); box-sizing: border-box;
     ">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant); padding-bottom: 18px; margin-bottom: 18px;">
-        <h3 class="headline-md" style="margin: 0; display: flex; align-items: center; gap: 8px; color: var(--secondary);">
-          <span class="material-symbols-outlined" style="font-size: 26px;">shopping_cart</span>
+      <!-- Header -->
+      <div style="background: var(--surface-container-high); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--outline-variant);">
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--on-surface); font-family: 'Inter', sans-serif;">
+          <span class="material-symbols-outlined" style="font-size: 22px; color: var(--secondary);">shopping_cart</span>
           ${t('header.cartTitle')}
         </h3>
-        <button id="cart-close-btn" style="cursor: pointer; color: var(--on-surface-variant); background: none; border: none; display: flex; align-items: center;">
-          <span class="material-symbols-outlined" style="font-size: 24px;">close</span>
+        <button id="cart-close-btn" style="width: 36px; height: 36px; border-radius: 50%; background: var(--surface-container); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; color: var(--on-surface-variant);">
+          <span class="material-symbols-outlined" style="font-size: 20px;">close</span>
         </button>
       </div>
       
       <!-- Cart items container -->
-      <div id="cart-drawer-items" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;" class="hide-scrollbar">
+      <div id="cart-drawer-items" style="flex: 1; overflow-y: auto; padding: 16px 20px;" class="hide-scrollbar">
         <!-- Rendered dynamically -->
       </div>
       
       <!-- Cart footer summary -->
-      <div style="border-top: 1px solid var(--outline-variant); padding-top: 20px; margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; color: var(--on-surface);">
-          <span>${t('header.cartTotal')}</span>
-          <span id="cart-drawer-total" style="color: var(--secondary); font-size: 20px;">$0.00</span>
+      <div style="background: var(--surface-container-high); border-top: 1px solid var(--outline-variant); padding: 20px 24px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <span style="font-weight: 600; font-size: 14px; color: var(--on-surface-variant);">${t('header.cartTotal')}</span>
+          <span id="cart-drawer-total" style="font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 800; color: var(--secondary);">$0.00</span>
         </div>
-        <button id="cart-drawer-checkout" class="btn btn-primary btn-full" style="padding: 16px; border-radius: var(--radius-xl); font-weight: 700;">
+        <button id="cart-drawer-checkout" style="
+          width: 100%; padding: 16px; border-radius: var(--radius-xl); font-weight: 700; font-size: 15px;
+          background: linear-gradient(135deg, var(--secondary), var(--tertiary)); color: var(--on-secondary);
+          border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: transform 0.2s, box-shadow 0.2s;
+        " onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.15)'">
+          <span class="material-symbols-outlined" style="font-size: 20px;">lock</span>
           ${t('header.cartCheckout')}
         </button>
       </div>
@@ -201,6 +201,12 @@ export function renderHeader(activePage = 'product') {
  * 📱 Reusable Bottom Navigation Component
  */
 export function renderBottomNav(activePage = 'home') {
+  const lang = localStorage.getItem('lang') || 'es';
+  const currency = localStorage.getItem('currency') || 'USD';
+  const flags = { es: '🇪🇸', en: '🇺🇸', fr: '🇫🇷', pt: '🇵🇹' };
+  const langNames = { es: 'Español', en: 'English', fr: 'Français', pt: 'Português' };
+  const currencySymbols = { COP: 'COP $', USD: 'USD $', EUR: 'EUR €' };
+
   const items = [
     { id: 'product', label: t('nav.product'), icon: 'storefront' },
     { id: 'scanner', label: t('nav.scanner'), icon: 'qr_code_scanner' },
@@ -212,22 +218,50 @@ export function renderBottomNav(activePage = 'home') {
       ${items.map(item => `
         <a class="bottom-nav__item ${activePage === item.id ? 'active' : ''}" data-nav="${item.id}">
           <span class="material-symbols-outlined">${item.icon}</span>
-          <span class="label-sm" style="font-size: 10px;">${item.label}</span>
+          <span class="label-sm">${item.label}</span>
         </a>
       `).join('')}
       <!-- Mobile Cart Toggle -->
       <a class="bottom-nav__item" id="btn-cart-toggle-mobile" style="position: relative;">
         <span class="material-symbols-outlined">shopping_cart</span>
-        <span class="label-sm" style="font-size: 10px;">${t('nav.cart')}</span>
-        <span id="cart-badge-count-mobile" style="
-          position: absolute; top: 0px; right: 4px;
-          background: var(--tertiary); color: var(--on-tertiary);
-          font-size: 9px; font-weight: 700; width: 16px; height: 16px;
-          border-radius: 50%; display: none; align-items: center; justify-content: center;
-          box-shadow: var(--shadow-sm); border: 1.5px solid var(--surface-container-low);
-        ">0</span>
+        <span class="label-sm">${t('nav.cart')}</span>
+        <span id="cart-badge-count-mobile" class="cart-badge" style="display: none; width: 14px; height: 14px; font-size: 8px; top: 0px; right: 2px; border-color: var(--surface-container-low);">0</span>
+      </a>
+      <!-- More Menu Toggle -->
+      <a class="bottom-nav__item" id="btn-more-mobile" style="cursor: pointer;">
+        <span class="material-symbols-outlined">more_horiz</span>
+        <span class="label-sm">Más</span>
       </a>
     </nav>
+
+    <!-- Mobile More Menu -->
+    <div id="mobile-more-menu" class="mobile-more-menu">
+      <div class="mobile-more-menu__panel">
+        ${Object.entries(flags).map(([code, flag]) => `
+          <button class="mobile-more-menu__opt ${code === lang ? 'active' : ''}" data-lang="${code}">
+            <span>${flag}</span>
+            <span>${langNames[code]}</span>
+            ${code === lang ? '<span class="material-symbols-outlined" style="font-size: 14px; color: var(--secondary); margin-left: auto;">check</span>' : ''}
+          </button>
+        `).join('')}
+
+        <div style="height:1px;background:var(--outline-variant);margin:4px 0;"></div>
+
+        ${Object.entries(currencySymbols).map(([code, label]) => `
+          <button class="mobile-more-menu__opt ${code === currency ? 'active' : ''}" data-curr="${code}">
+            <span>${label}</span>
+            ${code === currency ? '<span class="material-symbols-outlined" style="font-size: 14px; color: var(--secondary); margin-left: auto;">check</span>' : ''}
+          </button>
+        `).join('')}
+
+        <div style="height:1px;background:var(--outline-variant);margin:4px 0;"></div>
+
+        <button class="mobile-more-menu__opt" id="mobile-login-btn" style="color: var(--secondary);">
+          <span class="material-symbols-outlined" style="font-size: 16px;">storefront</span>
+          <span>${t('nav.seller')}</span>
+        </button>
+      </div>
+    </div>
   `;
 }
 
@@ -422,7 +456,7 @@ export function initHeader(appRouter) {
 
   const closeCart = () => {
     if (cartDrawer && cartBackdrop) {
-      cartDrawer.style.right = '-420px';
+      cartDrawer.style.right = '-440px';
       cartBackdrop.style.opacity = '0';
       setTimeout(() => {
         cartBackdrop.style.display = 'none';
@@ -434,6 +468,46 @@ export function initHeader(appRouter) {
   document.getElementById('btn-cart-toggle-mobile')?.addEventListener('click', openCart);
   document.getElementById('cart-close-btn')?.addEventListener('click', closeCart);
   cartBackdrop?.addEventListener('click', closeCart);
+
+  // Mobile more menu
+  const moreBtn = document.getElementById('btn-more-mobile');
+  const moreMenu = document.getElementById('mobile-more-menu');
+  if (moreBtn && moreMenu) {
+    moreBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      moreMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#mobile-more-menu') && !e.target.closest('#btn-more-mobile')) {
+        moreMenu.classList.remove('open');
+      }
+    });
+  }
+
+  // Mobile more menu — language options
+  document.querySelectorAll('#mobile-more-menu [data-lang]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      localStorage.setItem('lang', btn.dataset.lang);
+      showToast(t('header.langChanged'), 'success');
+      setTimeout(() => window.location.reload(), 500);
+    });
+  });
+
+  // Mobile more menu — currency options
+  document.querySelectorAll('#mobile-more-menu [data-curr]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      localStorage.setItem('currency', btn.dataset.curr);
+      showToast(`${t('header.currencyChanged')} ${btn.dataset.curr}`, 'success');
+      setTimeout(() => window.location.reload(), 500);
+    });
+  });
+
+  // Mobile more menu — login
+  document.getElementById('mobile-login-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-more-menu')?.classList.remove('open');
+    const hash = '#seller-login';
+    window.location.hash = hash;
+  });
 
   // checkout actions — multi-vendor: one pedido per seller
   document.getElementById('cart-drawer-checkout')?.addEventListener('click', async () => {
@@ -543,9 +617,14 @@ export function renderCartDrawerItems() {
 
   if (cart.length === 0) {
     container.innerHTML = `
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 16px; opacity: 0.7; padding-top: 40px;">
-        <span class="material-symbols-outlined" style="font-size: 56px; color: var(--outline);">shopping_bag</span>
-        <p class="body-md" style="font-weight: 500;">${t('header.cartEmpty')}</p>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; padding-top: 60px;">
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--surface-container-high); display: flex; align-items: center; justify-content: center;">
+          <span class="material-symbols-outlined" style="font-size: 40px; color: var(--outline);">shopping_bag</span>
+        </div>
+        <div style="text-align: center;">
+          <p style="font-weight: 600; font-size: 16px; color: var(--on-surface); margin-bottom: 4px;">${t('header.cartEmpty')}</p>
+          <p style="font-size: 13px; color: var(--on-surface-variant);">Agrega productos para empezar</p>
+        </div>
       </div>
     `;
     totalEl.textContent = formatPrice(0);
@@ -556,41 +635,46 @@ export function renderCartDrawerItems() {
   const groups = {};
   cart.forEach((item, index) => {
     const uid = item.vendedorUid || 'unknown';
-    if (!groups[uid]) groups[uid] = { vendedorNombre: item.vendedorNombre || 'Vendedor', items: [], indexOffset: index };
+    if (!groups[uid]) groups[uid] = { vendedorNombre: item.vendedorNombre || 'Vendedor', items: [] };
     groups[uid].items.push({ ...item, localIdx: index });
   });
 
+  const catEmoji = { cacao: '🍫', cafe: '☕', banano: '🍌' };
   let subtotal = 0;
   container.innerHTML = Object.entries(groups).map(([uid, group]) => {
     const sellerTotal = group.items.reduce((s, i) => s + (i.price * i.quantity), 0);
     return `
-      <div style="margin-bottom: 8px;">
-        <p style="font-size: 11px; font-weight: 700; color: var(--secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 4px;">
-          <span class="material-symbols-outlined" style="font-size: 14px;">storefront</span>
-          ${group.vendedorNombre}
-        </p>
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <span style="font-weight: 700; font-size: 13px; color: var(--on-surface);">${group.vendedorNombre}</span>
+          <span style="font-size: 11px; font-weight: 500; color: var(--on-surface-variant);">· ${group.items.reduce((s, i) => s + i.quantity, 0)} ${t('orders.items')}</span>
+        </div>
         ${group.items.map((item, gIdx) => {
           const itemTotal = item.price * item.quantity;
           subtotal += itemTotal;
           return `
-            <div style="display: flex; align-items: center; gap: 10px; background: var(--surface-container-low); padding: 10px; border-radius: var(--radius-lg); border: 1px solid var(--outline-variant); margin-bottom: 6px;">
-              <img src="${item.image}" style="width: 42px; height: 42px; object-fit: cover; border-radius: var(--radius-lg);" />
+            <div style="display: flex; align-items: center; gap: 12px; background: var(--surface-container); padding: 12px; border-radius: var(--radius-lg); margin-bottom: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+              <div style="width: 48px; height: 48px; border-radius: var(--radius-lg); background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                ${item.image
+                  ? `<img src="${item.image}" style="width: 100%; height: 100%; object-fit: cover;" />`
+                  : `<span style="font-size: 24px;">${catEmoji[item.categoria] || '📦'}</span>`
+                }
+              </div>
               <div style="flex: 1; min-width: 0;">
-                <p style="font-weight: 700; font-size: 12px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</p>
-                <p style="font-size: 11px; font-weight: 600; color: var(--secondary);">${formatPrice(item.price)} ${t('header.perUnit')}</p>
+                <p style="font-weight: 700; font-size: 13px; color: var(--on-surface); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.name}</p>
+                <p style="font-size: 12px; font-weight: 600; color: var(--secondary); margin-top: 2px;">${formatPrice(item.price)} ${t('header.perUnit')}</p>
               </div>
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <button class="cart-qty-btn-minus" data-idx="${item.localIdx}" style="width: 22px; height: 22px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;">-</button>
-                <span style="font-size: 12px; font-weight: 700; min-width: 12px; text-align: center;">${item.quantity}</span>
-                <button class="cart-qty-btn-plus" data-idx="${item.localIdx}" style="width: 22px; height: 22px; border-radius: 50%; background: var(--surface-container-highest); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;">+</button>
+              <div style="display: flex; align-items: center; gap: 6px; background: var(--surface-container-highest); padding: 2px; border-radius: var(--radius-full);">
+                <button class="cart-qty-btn-minus" data-idx="${item.localIdx}" style="width: 26px; height: 26px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--on-surface); border: none; transition: background 0.15s;">−</button>
+                <span style="font-size: 13px; font-weight: 700; min-width: 16px; text-align: center; color: var(--on-surface);">${item.quantity}</span>
+                <button class="cart-qty-btn-plus" data-idx="${item.localIdx}" style="width: 26px; height: 26px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; cursor: pointer; color: var(--on-surface); border: none; transition: background 0.15s;">+</button>
               </div>
-              <button class="cart-delete-btn" data-idx="${item.localIdx}" style="color: var(--error); padding: 2px; cursor: pointer; display: flex; align-items: center; background: none; border: none;" title="${t('header.cartDelete')}">
+              <button class="cart-delete-btn" data-idx="${item.localIdx}" style="color: var(--error); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: transparent; border: none; transition: background 0.15s; flex-shrink: 0;">
                 <span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
               </button>
             </div>
           `;
         }).join('')}
-        <p style="font-size: 11px; font-weight: 600; color: var(--on-surface-variant); text-align: right; margin-top: 2px;">${t('orders.total')}: ${formatPrice(sellerTotal)}</p>
       </div>
     `;
   }).join('');

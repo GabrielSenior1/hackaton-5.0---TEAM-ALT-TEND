@@ -112,25 +112,23 @@ function renderPage(pageId) {
       <div id="page-container">
         ${page.render()}
       </div>
-      <footer style="background: var(--surface-container-high); border-top: 1px solid var(--outline-variant); padding: 40px 24px 24px; margin-top: 48px;">
-        <div style="max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
-          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
-                <span style="font-size: 20px;">🌿</span>
-                <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; color: var(--secondary);">KANKU</span>
-              </div>
-              <p style="font-size: 13px; color: var(--on-surface-variant); max-width: 260px; line-height: 1.5;">Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.</p>
+      <footer class="site-footer">
+        <div class="site-footer__inner">
+          <div>
+            <div class="site-footer__brand">
+              <span style="font-size: 20px;">🌿</span>
+              KANKU
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--secondary);">${t('header.accessibility')}</span>
-              <a data-nav="traceability" style="font-size: 13px; color: var(--on-surface-variant); cursor: pointer;">${t('nav.traceability')}</a>
-              <a data-nav="story" style="font-size: 13px; color: var(--on-surface-variant); cursor: pointer;">Story</a>
-            </div>
+            <p class="site-footer__tagline">Marketplace de la Sierra Nevada. Cacao, Café y Banano directo del productor a tu mesa.</p>
           </div>
-          <div style="border-top: 1px solid var(--outline-variant); padding-top: 16px; text-align: center;">
-            <p style="font-size: 12px; color: var(--outline);">&copy; ${new Date().getFullYear()} KANKU. Sierra Nevada de Santa Marta, Colombia.</p>
+          <div class="site-footer__links">
+            <h4>${t('header.accessibility')}</h4>
+            <a data-nav="traceability">${t('nav.traceability')}</a>
+            <a data-nav="story">Story</a>
           </div>
+        </div>
+        <div class="site-footer__bottom">
+          &copy; ${new Date().getFullYear()} KANKU. Sierra Nevada de Santa Marta, Colombia.
         </div>
       </footer>
       ${renderBottomNav(pageId)}
