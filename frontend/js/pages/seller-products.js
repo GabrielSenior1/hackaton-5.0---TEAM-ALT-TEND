@@ -236,7 +236,7 @@ function renderProductsGrid() {
         <h4 style="font-weight: 700; font-size: 15px; color: var(--on-surface);">${product.nombre}</h4>
         <p style="font-size: 12px; color: var(--on-surface-variant); flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${product.descripcion || t('seller.products.noDescription')}</p>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-          <span style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--secondary);">${formatPrice(product.precio || 0)}</span>
+          <span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--secondary);">${formatPrice(product.precio || 0)}</span>
           <span style="font-size: 12px; color: var(--on-surface-variant);">${t('seller.products.stock')}: ${product.stock ?? 0}</span>
         </div>
         <div style="display: flex; gap: 8px; margin-top: 8px;">

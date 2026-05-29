@@ -34,7 +34,7 @@ export function renderHeader(activePage = 'home') {
     <header class="top-app-bar" id="top-app-bar">
       <a class="top-app-bar__brand" data-nav="home">
         <span style="font-size: 24px;">🌿</span>
-        <span class="top-app-bar__title" style="font-family: 'Playfair Display', serif; font-weight: 700; color: var(--secondary);">KANKU</span>
+        <span class="top-app-bar__title" style="font-family: 'Inter', sans-serif; font-weight: 700; color: var(--secondary);">KANKU</span>
       </a>
 
       <!-- Navigation Links for Desktop -->

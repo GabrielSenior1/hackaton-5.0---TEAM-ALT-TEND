@@ -17,7 +17,7 @@ export function renderSellerHeader(activePage = 'seller') {
       <div class="seller-sidebar__brand">
         <a data-nav="home" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
           <span style="font-size: 28px;">🌿</span>
-          <span style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 22px; color: var(--secondary);">KANKU</span>
+          <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 22px; color: var(--secondary);">KANKU</span>
         </a>
         <span class="label-sm" style="color: var(--on-surface-variant); margin-top: 4px; display: block;">${t('seller.header.portal')}</span>
       </div>
@@ -59,7 +59,7 @@ export function renderSellerHeader(activePage = 'seller') {
       <button id="seller-menu-toggle" style="display: flex; align-items: center; background: none; border: none; cursor: pointer;">
         <span class="material-symbols-outlined" style="font-size: 26px; color: var(--on-surface);">menu</span>
       </button>
-      <span style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 18px; color: var(--secondary);">KANKU</span>
+      <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; color: var(--secondary);">KANKU</span>
       <button id="seller-logout-btn-mobile" style="display: flex; align-items: center; background: none; border: none; cursor: pointer;">
         <span class="material-symbols-outlined" style="font-size: 22px; color: var(--error);">logout</span>
       </button>

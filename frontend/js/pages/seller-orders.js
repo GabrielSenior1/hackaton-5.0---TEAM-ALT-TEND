@@ -158,7 +158,7 @@ function renderOrdersList() {
             <p style="font-size: 12px; color: var(--on-surface-variant);">${t('seller.orders.buyer')}: <strong>${order.compradorNombre || order.compradorEmail || t('seller.orders.anonymous')}</strong></p>
           </div>
           <div style="display: flex; align-items: center; gap: 16px;">
-            <span style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--secondary);">${formatPrice(order.total || 0)}</span>
+            <span style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; color: var(--secondary);">${formatPrice(order.total || 0)}</span>
             
             ${order.estado === 'pendiente' ? `
               <button class="btn btn-primary order-action-btn" data-id="${order.id}" data-action="confirmado" style="padding: 8px 16px; font-size: 11px; border-radius: var(--radius-lg);">

@@ -530,11 +530,11 @@ function initSensorData() {
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
             <div>
               <p class="label-sm" style="color: var(--on-surface-variant);">${t('dashboard.temp')}</p>
-              <p style="font-size: 24px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--on-surface);">${sensor.temperatura || '—'}°</p>
+              <p style="font-size: 24px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--on-surface);">${sensor.temperatura || '—'}°</p>
             </div>
             <div>
               <p class="label-sm" style="color: var(--on-surface-variant);">${t('dashboard.humidity')}</p>
-              <p style="font-size: 24px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--tertiary);">${sensor.humedad || '—'}%</p>
+              <p style="font-size: 24px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--tertiary);">${sensor.humedad || '—'}%</p>
             </div>
           </div>
           <div style="width: 100%; height: 4px; background: var(--surface-container-highest); border-radius: 9999px; overflow: hidden;">

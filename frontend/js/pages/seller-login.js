@@ -18,7 +18,7 @@ export function renderSellerLogin() {
           <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--secondary-container); display: flex; align-items: center; justify-content: center;">
             <span style="font-size: 36px;">🌿</span>
           </div>
-          <h1 class="headline-lg" style="color: var(--secondary); font-family: 'Playfair Display', serif;">KANKU</h1>
+          <h1 class="headline-lg" style="color: var(--secondary);">KANKU</h1>
           <p class="body-md" style="color: var(--on-surface-variant);">${t('seller.login.title')}</p>
         </div>
 
